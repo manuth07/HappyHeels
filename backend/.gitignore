@@ -1,0 +1,37 @@
+# Maven target directory
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven wrapper jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Help file
+HELP.md
+
+# IDEs & Editors
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated
+.springBeans
+.sts4-cache
+
+# Environment & Local Configuration
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+logs/
+
+# Allow .gitkeep
+!.gitkeep
+

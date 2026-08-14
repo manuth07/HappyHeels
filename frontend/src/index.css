@@ -1,0 +1,60 @@
+.dark-theme{
+    --root_background: #1f1f1f;
+    --text_color: #ffffff;
+    --card_background: #2a2a2a;
+    --card_text: #e0e0e0;
+}
+
+.light-theme{
+    --root_background: white;
+    --text_color: #000000;
+    --card_background: #ffffff;
+    --card_text: #2c3e50;
+}
+
+:root{
+    background-color: var(--root_background);
+    color: var(--text_color);
+}
+
+/* Dark mode specific overrides */
+.dark-theme .product-card {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+.dark-theme .card-body-flex {
+    color: #e0e0e0 !important;
+}
+
+.dark-theme .card-brand {
+    color: #b0b0b0 !important;
+}
+
+.dark-theme .price-label {
+    color: #ffffff !important;
+}
+
+.dark-theme .navbar {
+    background-color: #1f1f1f !important;
+}
+
+.dark-theme .nav-link {
+    color: #e0e0e0 !important;
+}
+
+.dark-theme .nav-link:hover {
+    color: #ffffff !important;
+}
+
+.dark-theme .product-name-text {
+    color: #ffffff !important;
+}
+
+.light-theme .product-name-text {
+    color: #2c3e50 !important;
+}
+
+.product-name-text {
+    color: #2c3e50;
+}
