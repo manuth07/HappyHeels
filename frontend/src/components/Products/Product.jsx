@@ -1,21 +1,18 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { useState } from "react";
+import { useNavigate, useParams } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/Context";
-import API from "../../axios"; // use axios instance
+import API from "../../axios";
 import unplugged from "../../assets/unplugged.png";
-import UpdateProduct from "./UpdateProduct";
 import Reviews from "./Reviews";
 import "./Product.css";
+
 const Product = () => {
   const { id } = useParams();
-  const { data, addToCart, removeFromCart, cart, refreshData, user } =
-    useContext(AppContext);
+  const { addToCart, removeFromCart, refreshData, user } = useContext(AppContext);
   const [product, setProduct] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
   
-  // Check if user is admin
   const isAdmin = user && user.role === 'ROLE_ADMIN';
 
   useEffect(() => {
@@ -44,11 +41,10 @@ const Product = () => {
   }, [id]);
 
   const deleteProduct = async () => {
+    if (!window.confirm("ARE YOU SURE YOU WANT TO DELETE THIS PRODUCT?")) return;
     try {
       await API.delete(`/product/${id}`);
       removeFromCart(id);
-      console.log("Product deleted successfully");
-      alert("Product deleted successfully");
       refreshData();
       navigate("/");
     } catch (error) {
@@ -62,12 +58,6 @@ const Product = () => {
 
   const handlAddToCart = () => {
     addToCart(product);
-    const isLoggedIn = !!localStorage.getItem('token');
-    if (isLoggedIn) {
-      alert("Product added to cart");
-    } else {
-      alert("Added to cart. Create an account or login to checkout.");
-    }
   };
 
   const scrollToReviews = () => {
@@ -79,46 +69,51 @@ const Product = () => {
       });
     }
   };
+
   if (!product) {
     return (
-      <h2 className="text-center" style={{ padding: "10rem" }}>
-        Loading...
-      </h2>
+      <div className="text-center py-5" style={{ marginTop: "120px" }}>
+        <h4 className="fw-bold text-uppercase">LOADING PRODUCT DETAILS...</h4>
+      </div>
     );
   }
+
   return (
-    <>
-      <div className="containers" style={{ display: "flex" }}>
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px" }}>
+      <div className="containers mb-5">
         <img
           className="left-column-img"
           src={imageUrl || unplugged}
           alt={product.imageName || product.name}
         />
 
-        <div className="right-column" style={{ width: "50%" }}>
+        <div className="right-column">
           <div className="product-description">
-            <div className="product-meta-row">
-            <span>
-              {product.category}
-            </span>
-            <p className="release-date">
-              <h6>Listed : <span> <i> {product.date ? new Date(product.date).toLocaleDateString() : '-'}</i></span></h6>
-            </p>
+            <div className="d-flex align-items-center justify-content-between mb-2">
+              <span className="badge fs-6">{product.category}</span>
+              <span className="text-uppercase fw-bold small">
+                LISTED: {product.date ? new Date(product.date).toLocaleDateString() : '-'}
+              </span>
             </div>
             
-           
             <h1 className="product-title-lg">
               {product.name}
             </h1>
-            <i style={{ marginBottom: "3rem" }}>{product.brand}</i>
-            <p className="desc-label">PRODUCT DESCRIPTION :</p>
-            <p style={{ marginBottom: "1rem" }}>{product.description}</p>
+            <p className="fw-bold text-uppercase tracking-wider text-muted mb-4">{product.brand}</p>
+            
+            <p className="desc-label">DESCRIPTION:</p>
+            <p className="mb-4 lead fs-6">{product.description}</p>
           </div>
 
           <div className="product-price">
-            <span style={{ fontSize: "2rem", fontWeight: "bold" }}>
-              {"Rs " + product.price}
-            </span>
+            <div className="d-flex align-items-center gap-3 mb-3">
+              <span className="fs-1 fw-bold tracking-wider">
+                LKR {product.price}
+              </span>
+              <span className="badge bg-light text-dark border border-dark">
+                STOCK: {product.stockQuantity} UNITS
+              </span>
+            </div>
             
             {/* Main Action Buttons */}
             <div className="main-action-buttons">
@@ -129,30 +124,22 @@ const Product = () => {
                 onClick={handlAddToCart}
                 disabled={!product.productAvailable}
               >
-                <i className="bi bi-cart-plus"></i>
-                {product.productAvailable ? "Add to Cart" : "Out of Stock"}
+                {product.productAvailable ? "ADD TO BAG" : "OUT OF STOCK"}
               </button>
               
               <button
                 className="view-reviews-btn"
                 onClick={scrollToReviews}
               >
-                <i className="bi bi-star-fill"></i>
-                View Reviews
+                CUSTOMER REVIEWS
               </button>
             </div>
+
             {!localStorage.getItem('token') && (
-              <p className="text-muted" style={{ marginTop: '0.5rem' }}>
-                You can add items as a visitor. Please login or register to checkout.
+              <p className="small text-uppercase fw-bold text-muted mt-2">
+                VISITOR MODE: ADD ITEMS TO BAG AND LOGIN AT CHECKOUT.
               </p>
             )}
-            
-            <h6 style={{ marginBottom: "1rem" }}>
-              Stock Available :{" "}
-              <i style={{ color: "green", fontWeight: "bold" }}>
-                {product.stockQuantity}
-              </i>
-            </h6>
           </div>
           
           {/* Admin Only Buttons */}
@@ -163,16 +150,14 @@ const Product = () => {
                 type="button"
                 onClick={handleEditClick}
               >
-                <i className="bi bi-pencil-square"></i>
-                Update Product
+                EDIT PRODUCT
               </button>
               <button
                 className="delete-btn"
                 type="button"
                 onClick={deleteProduct}
               >
-                <i className="bi bi-trash"></i>
-                Delete Product
+                DELETE PRODUCT
               </button>
             </div>
           )}
@@ -181,7 +166,7 @@ const Product = () => {
       
       {/* Reviews Section */}
       <Reviews productId={product.id} />
-    </>
+    </div>
   );
 };
 

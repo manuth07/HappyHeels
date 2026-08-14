@@ -29,16 +29,14 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
       if (!allowedTypes.includes(file.type)) {
-        setError('Please upload a valid image (JPEG, PNG) or PDF file');
+        setError('PLEASE UPLOAD A VALID IMAGE (JPEG, PNG) OR PDF FILE');
         return;
       }
       
-      // Validate file size (10MB max)
       if (file.size > 10 * 1024 * 1024) {
-        setError('File size must be less than 10MB');
+        setError('FILE SIZE MUST BE LESS THAN 10MB');
         return;
       }
       
@@ -50,36 +48,30 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Check if user is logged in
     const token = localStorage.getItem('token');
-    console.log('Checkout - Token available:', !!token);
-    console.log('Checkout - User context:', user);
-    console.log('Checkout - Token value:', token ? token.substring(0, 20) + '...' : 'No token');
-    
     if (!token || !user) {
-      setError('Please login to place an order');
+      setError('PLEASE LOGIN TO PLACE AN ORDER');
       return;
     }
     
-    // Validate form fields
     if (!formData.customerName.trim()) {
-      setError('Please enter your full name');
+      setError('PLEASE ENTER YOUR FULL NAME');
       return;
     }
     if (!formData.customerEmail.trim()) {
-      setError('Please enter your email');
+      setError('PLEASE ENTER YOUR EMAIL');
       return;
     }
     if (!formData.customerPhone.trim()) {
-      setError('Please enter your phone number');
+      setError('PLEASE ENTER YOUR PHONE NUMBER');
       return;
     }
     if (!formData.shippingAddress.trim()) {
-      setError('Please enter your shipping address');
+      setError('PLEASE ENTER YOUR SHIPPING ADDRESS');
       return;
     }
     if (!bankSlip) {
-      setError('Please upload a bank slip');
+      setError('PLEASE UPLOAD A BANK SLIP');
       return;
     }
 
@@ -104,23 +96,10 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
       formDataToSend.append('order', JSON.stringify(orderData));
       formDataToSend.append('bankSlip', bankSlip);
       
-      console.log('Sending order data:', orderData);
-      console.log('Bank slip file:', bankSlip);
-      console.log('Token available:', !!token);
-      console.log('Token value:', token ? token.substring(0, 20) + '...' : 'No token');
-      console.log('User context:', user);
-      console.log('FormData contents:');
-      for (let [key, value] of formDataToSend.entries()) {
-        console.log(key, value);
-      }
-      
-      const response = await API.post('/orders', formDataToSend);
-      
-      console.log('Order response:', response.data);
+      await API.post('/orders', formDataToSend);
 
-      setSuccess('Order placed successfully! Your order is pending payment verification.');
+      setSuccess('ORDER PLACED SUCCESSFULLY! PENDING PAYMENT VERIFICATION.');
       
-      // Reset form
       setFormData({
         customerName: user?.name || '',
         customerEmail: user?.email || '',
@@ -129,7 +108,6 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
       });
       setBankSlip(null);
       
-      // Call success callback to clear cart and close modal
       setTimeout(() => {
         onOrderSuccess();
         handleClose();
@@ -137,22 +115,7 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
 
     } catch (error) {
       console.error('Error placing order:', error);
-      console.error('Error response:', error.response);
-      console.error('Error status:', error.response?.status);
-      console.error('Error data:', error.response?.data);
-      
-      // Don't logout on order errors, just show the error message
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else if (error.response?.status === 401) {
-        setError('Authentication failed. Please try logging in again.');
-      } else if (error.response?.status === 403) {
-        setError('Access denied. Please check your permissions.');
-      } else if (error.code === 'NETWORK_ERROR' || !error.response) {
-        setError('Cannot connect to server. Please check your internet connection and try again.');
-      } else {
-        setError(`Failed to place order. Error: ${error.response?.status || 'Unknown error'}`);
-      }
+      setError(error.response?.data?.message || 'FAILED TO PLACE ORDER. PLEASE TRY AGAIN.');
     } finally {
       setLoading(false);
     }
@@ -166,190 +129,157 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
   };
 
   return (
-    <div className="checkoutPopup">
-      <Modal show={show} onHide={handleCloseModal} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <i className="bi bi-cart-check me-2"></i>
-            Checkout & Payment
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {error && (
-            <Alert variant="danger" className="mb-3">
-              <i className="bi bi-exclamation-triangle me-2"></i>
-              {error}
-            </Alert>
-          )}
-          
-          {success && (
-            <Alert variant="success" className="mb-3">
-              <i className="bi bi-check-circle me-2"></i>
-              {success}
-            </Alert>
-          )}
+    <Modal show={show} onHide={handleCloseModal} size="lg" centered>
+      <Modal.Header closeButton>
+        <Modal.Title className="fw-bold text-uppercase">
+          CHECKOUT & PAYMENT
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {error && (
+          <Alert variant="danger" className="mb-3 rounded-0 border-dark">
+            {error}
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert variant="success" className="mb-3 rounded-0 border-dark bg-warning text-dark border-2">
+            {success}
+          </Alert>
+        )}
 
-
-          <Form id="checkout-form" onSubmit={handleSubmit}>
-            <Row>
-              <Col md={6}>
-                <h5 className="mb-3">
-                  <i className="bi bi-person me-2"></i>
-                  Customer Information
-                </h5>
-                
-                <Form.Group className="mb-3">
-                  <Form.Label>Full Name *</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="customerName"
-                    value={formData.customerName}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your full name"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Email *</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="customerEmail"
-                    value={formData.customerEmail}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your email"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Phone Number *</Form.Label>
-                  <Form.Control
-                    type="tel"
-                    name="customerPhone"
-                    value={formData.customerPhone}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your phone number"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Shipping Address *</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="shippingAddress"
-                    value={formData.shippingAddress}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your complete shipping address"
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col md={6}>
-                <h5 className="mb-3">
-                  <i className="bi bi-credit-card me-2"></i>
-                  Payment Information
-                </h5>
-
-                <div className="payment-info mb-3 p-3 bg-light rounded">
-                  <h6><i className="bi bi-info-circle me-2"></i>Payment Instructions:</h6>
-                  <ol className="small">
-                    <li>Transfer the total amount to our bank account</li>
-                    <li>Upload the bank slip as proof of payment</li>
-                    <li>We will verify the payment and process your order</li>
-                  </ol>
-                  <p className="mb-0 small text-muted">
-                    <strong>Bank Details:</strong><br/>
-                    Account: HappyHeels Store<br/>
-                    Bank: Commercial Bank<br/>
-                    Account Number: 1234567890
-                  </p>
-                </div>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Upload Bank Slip *</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={handleFileChange}
-                    required
-                  />
-                  <Form.Text className="text-muted">
-                    Upload image (JPEG, PNG) or PDF file. Max size: 10MB
-                  </Form.Text>
-                  {bankSlip && (
-                    <div className="mt-2">
-                      <small className="text-success">
-                        <i className="bi bi-check-circle me-1"></i>
-                        Selected: {bankSlip.name}
-                      </small>
-                    </div>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <hr />
-
-            <h5 className="mb-3">
-              <i className="bi bi-cart me-2"></i>
-              Order Summary
-            </h5>
-            
-            <div className="checkout-items mb-3">
-              {cartItems.map((item) => (
-                <div key={item.id} className="checkout-item d-flex mb-2 p-2 border rounded">
-                  <img 
-                    src={item.imageUrl} 
-                    alt={item.name} 
-                    className="cart-item-image" 
-                    style={{ width: '80px', height: '80px', objectFit: 'cover', marginRight: '15px' }} 
-                  />
-                  <div className="flex-grow-1">
-                    <h6 className="mb-1">{item.name}</h6>
-                    <p className="mb-1 text-muted">Quantity: {item.quantity}</p>
-                    <p className="mb-0 fw-bold">LKR {item.price * item.quantity}</p>
-                  </div>
-                </div>
-              ))}
+        <Form id="checkout-form" onSubmit={handleSubmit}>
+          <Row>
+            <Col md={6}>
+              <h5 className="fw-bold text-uppercase mb-3 border-bottom border-dark pb-2">
+                CUSTOMER INFORMATION
+              </h5>
               
-              <div className="total-section p-3 bg-primary text-white rounded">
-                <h4 className="mb-0 text-center">
-                  <i className="bi bi-currency-rupee me-2"></i>
-                  Total: LKR {totalPrice.toFixed(2)}
-                </h4>
+              <Form.Group className="mb-3">
+                <Form.Label>FULL NAME *</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="customerName"
+                  value={formData.customerName}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="FULL NAME"
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>EMAIL *</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="customerEmail"
+                  value={formData.customerEmail}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="EMAIL ADDRESS"
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>PHONE NUMBER *</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="customerPhone"
+                  value={formData.customerPhone}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="PHONE NUMBER"
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>SHIPPING ADDRESS *</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="shippingAddress"
+                  value={formData.shippingAddress}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="COMPLETE SHIPPING ADDRESS"
+                />
+              </Form.Group>
+            </Col>
+
+            <Col md={6}>
+              <h5 className="fw-bold text-uppercase mb-3 border-bottom border-dark pb-2">
+                PAYMENT INSTRUCTIONS
+              </h5>
+
+              <div className="p-3 bg-light border border-2 border-dark mb-3">
+                <h6 className="fw-bold text-uppercase mb-2">BANK TRANSFER DETAILS:</h6>
+                <p className="mb-1 small"><strong>ACCOUNT:</strong> HAPPYHEELS STORE</p>
+                <p className="mb-1 small"><strong>BANK:</strong> COMMERCIAL BANK</p>
+                <p className="mb-0 small"><strong>ACCOUNT NO:</strong> 1234567890</p>
               </div>
+
+              <Form.Group className="mb-3">
+                <Form.Label>UPLOAD BANK SLIP *</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleFileChange}
+                  required
+                />
+                {bankSlip && (
+                  <div className="mt-2 text-uppercase fw-bold small text-success">
+                    SELECTED: {bankSlip.name}
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <hr className="border-dark" />
+
+          <h5 className="fw-bold text-uppercase mb-3">
+            ORDER SUMMARY
+          </h5>
+          
+          <div className="checkout-items mb-3">
+            {cartItems.map((item) => (
+              <div key={item.id} className="d-flex align-items-center mb-2 p-2 border border-dark bg-white">
+                <img 
+                  src={item.imageUrl} 
+                  alt={item.name} 
+                  style={{ width: '60px', height: '60px', objectFit: 'cover', border: '1px solid #000', marginRight: '15px' }} 
+                />
+                <div className="flex-grow-1">
+                  <h6 className="mb-0 fw-bold text-uppercase">{item.name}</h6>
+                  <small className="text-muted fw-bold">QTY: {item.quantity}</small>
+                </div>
+                <div className="fw-bold fs-6">
+                  LKR {item.price * item.quantity}
+                </div>
+              </div>
+            ))}
+            
+            <div className="p-3 bg-dark text-white text-end border border-2 border-dark mt-3">
+              <h4 className="mb-0 fw-bold text-uppercase" style={{ letterSpacing: '1.5px' }}>
+                TOTAL: LKR {totalPrice.toFixed(2)}
+              </h4>
             </div>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
-            Cancel
-          </Button>
-          <Button 
-            variant="primary" 
-            type="submit"
-            form="checkout-form"
-            disabled={loading || !bankSlip}
-          >
-            {loading ? (
-              <>
-                <Spinner animation="border" size="sm" className="me-2" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-check-circle me-2"></i>
-                Place Order
-              </>
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+          </div>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
+          CANCEL
+        </Button>
+        <Button 
+          variant="primary" 
+          type="submit"
+          form="checkout-form"
+          disabled={loading || !bankSlip}
+        >
+          {loading ? 'PROCESSING...' : 'PLACE ORDER'}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

@@ -1,211 +1,160 @@
+/* ==========================================================================
+   BRUTALIST MONOCHROME AUTH STYLES - HAPPY HEELS
+   ========================================================================== */
+
 .auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f2f5; /* Light gray background */
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #FFFFFF !important;
+  padding: 20px;
 }
 
-.auth-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 24px 24px 16px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    position: relative;
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card, .auth-modal-card {
+  background-color: #FFFFFF !important;
+  border: 3px solid #000000 !important;
+  border-radius: 0px !important;
+  box-shadow: 6px 6px 0px #000000 !important;
+  padding: 2.5rem 2rem 2rem !important;
+  width: 100%;
+  max-width: 440px;
+  text-align: left;
+  position: relative;
 }
 
 .auth-title {
-    font-size: 2.2em;
-    color: #333333;
-    margin-bottom: 30px;
-    font-weight: 700;
+  font-size: 2rem !important;
+  color: #000000 !important;
+  margin-bottom: 1.5rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  text-align: center;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 0.5rem;
 }
 
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555555;
-    font-weight: 600;
-}
-
-.form-control {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #dddddd;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-.auth-button {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 12px;
-}
-
-.auth-button:hover {
-    background-color: #0056b3;
-}
-
-.auth-link-text {
-    margin-top: 25px;
-    color: #777777;
-}
-
-.auth-link-text a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.auth-link-text a:hover {
-    text-decoration: underline;
-}
-
-.alert {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    font-size: 0.9em;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.password-input-wrapper {
-    position: relative;
-}
-
-.password-toggle-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #888;
-    font-size: 1.1em;
-}
-
-.password-toggle-icon:hover {
-    color: #333;
-}
-
-/* Login Type Tabs */
 .login-type-tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #ddd;
+  display: flex;
+  margin-bottom: 1.5rem;
+  border: 2px solid #000000;
+  border-radius: 0px !important;
+  overflow: hidden;
 }
 
 .login-type-tabs .tab {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    background: #f8f9fa;
-    cursor: pointer;
-    transition: all 0.3s;
+  flex: 1;
+  padding: 0.75rem;
+  border: none !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  cursor: pointer;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all 0.15s ease;
+  box-shadow: none !important;
 }
 
 .login-type-tabs .tab.active {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
+  background: #000000 !important;
+  color: #FFFFFF !important;
 }
 
 .login-type-tabs .tab:hover:not(.active) {
-    background: #e9ecef;
+  background: #E2FF00 !important;
+  color: #000000 !important;
 }
 
-/* Admin Hint */
-.admin-hint {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 15px 0;
-    text-align: center;
-}
-
-/* Close Button */
 .close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    color: #666;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 10;
-}
-
-/* Make register form fully visible without scrolling */
-.register-card {
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.register-card form {
-    overflow-y: auto;
-    padding-bottom: 8px;
-}
-
-.register-card .form-group {
-    margin-bottom: 12px;
-}
-
-.register-card .auth-title {
-    margin-bottom: 16px;
-}
-
-.register-card .auth-button {
-    position: sticky;
-    bottom: 0;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0px !important;
+  font-size: 1.2rem;
+  color: #000000 !important;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px #000000 !important;
+  transition: all 0.15s ease;
 }
 
 .close-button:hover {
-    background-color: #f0f0f0;
-    color: #333;
-    transform: scale(1.1);
+  background-color: #E2FF00 !important;
+  transform: translate(-1px, -1px);
 }
 
-.close-button:active {
-    transform: scale(0.95);
+.auth-button {
+  width: 100%;
+  padding: 0.85rem 1rem !important;
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0px !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 1rem;
+  box-shadow: 3px 3px 0px #000000 !important;
+}
+
+.auth-button:hover {
+  background-color: #E2FF00 !important;
+  color: #000000 !important;
+  box-shadow: 5px 5px 0px #000000 !important;
+  transform: translate(-2px, -2px);
+}
+
+.auth-link-text {
+  margin-top: 1.5rem;
+  color: #000000;
+  text-align: center;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.auth-link-text a {
+  color: #000000;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.auth-link-text a:hover {
+  background-color: #E2FF00;
+}
+
+.alert-danger {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0px !important;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

@@ -9,26 +9,20 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
-    const [loginType, setLoginType] = useState('user'); // 'user' or 'admin'
+    const [loginType, setLoginType] = useState('user');
     const navigate = useNavigate();
-    const { refreshData, setUser } = useContext(AppContext);
+    const { setUser } = useContext(AppContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         try {
-            console.log('Login as:', loginType);
             const response = await API.post('/auth/login', {
                 email,
                 password,
             });
             
-            console.log('Login response:', response.data);
-            
             const { token, email: userEmail, name, role } = response.data;
-            
-            console.log('Storing token:', token.substring(0, 20) + '...');
-            console.log('Storing user:', { email: userEmail, name, role });
             
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify({ email: userEmail, name, role }));
@@ -41,9 +35,6 @@ const Login = () => {
                 });
             }
             
-            console.log('Login successful! Role:', role);
-            
-            // Redirect based on role
             if (role === 'ROLE_ADMIN') {
                 navigate('/admin/dashboard');
             } else {
@@ -52,7 +43,7 @@ const Login = () => {
             
         } catch (err) {
             console.error('Login error:', err);
-            setError('Invalid email or password');
+            setError('INVALID EMAIL OR PASSWORD');
         }
     };
 
@@ -72,68 +63,63 @@ const Login = () => {
                 <button 
                     className="close-button" 
                     onClick={() => navigate('/')}
-                    title="Close and return to home"
+                    title="Close"
                 >
-                    <i className="bi bi-x-lg"></i>
+                    X
                 </button>
-                <h2 className="auth-title">Login</h2>
+                <h2 className="auth-title">ACCOUNT LOGIN</h2>
                 
-                {/* ✅ Role Selection Tabs */}
                 <div className="login-type-tabs">
                     <button 
                         className={`tab ${loginType === 'user' ? 'active' : ''}`}
                         onClick={() => setLoginType('user')}
                     >
-                        👟 Customer Login
+                        CUSTOMER LOGIN
                     </button>
                     <button 
                         className={`tab ${loginType === 'admin' ? 'active' : ''}`}
                         onClick={() => setLoginType('admin')}
                     >
-                        ⚙️ Admin Login
+                        ADMIN LOGIN
                     </button>
                 </div>
 
                 {error && <div className="alert alert-danger">{error}</div>}
                 
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="emailInput">Email address</label>
+                    <div className="form-group mb-3">
+                        <label className="form-label" htmlFor="emailInput">EMAIL ADDRESS</label>
                         <input
                             type="email"
                             className="form-control"
                             id="emailInput"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Enter your email address"
+                            placeholder="ENTER EMAIL ADDRESS"
                             required
                         />
                     </div>
-                    <div className="form-group password-group">
-                        <label htmlFor="passwordInput">Password</label>
-                        <div className="password-input-wrapper">
+                    <div className="form-group mb-3">
+                        <label className="form-label" htmlFor="passwordInput">PASSWORD</label>
+                        <div className="position-relative">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 className="form-control"
                                 id="passwordInput"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Enter your password"
+                                placeholder="ENTER PASSWORD"
                                 required
                             />
-                            <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
-                                <i className={showPassword ? "bi bi-eye-slash-fill" : "bi bi-eye-fill"}></i>
-                            </span>
                         </div>
                     </div>
                     <button type="submit" className="auth-button">
-                        {loginType === 'admin' ? 'Admin Login' : 'Customer Login'}
+                        {loginType === 'admin' ? 'ADMIN LOGIN' : 'CUSTOMER LOGIN'}
                     </button>
                 </form>
 
-
                 <p className="auth-link-text">
-                    Don't have an account? <Link to="/register">Register here</Link>
+                    DON'T HAVE AN ACCOUNT? <Link to="/register">REGISTER HERE</Link>
                 </p>
             </div>
         </div>

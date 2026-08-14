@@ -12,9 +12,10 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import UserProfile from "./components/Auth/UserProfile";
-import AdminDashboard from "./components/Admin/AdminDashboard"; // ✅ Add this import
+import AdminDashboard from "./components/Admin/AdminDashboard";
 import ManageUsers from "./components/Admin/ManageUsers";
 import ManageOrders from "./components/Admin/ManageOrders";
+import Footer from "./components/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -46,88 +47,84 @@ function App() {
     }
   };
 
-  // ✅ Don't show navbar on login/register/profile pages
-  const showNavbar = !['/login', '/register', '/profile'].includes(location.pathname);
-
   return (
     <AppProvider>
-      {/* ✅ Conditionally render navbar */}
-      {showNavbar && <Navbar onSelectCategory={handleCategorySelect} onClearCategory={handleClearCategory} />}
-      
-      <Routes>
-        {/* ✅ PUBLIC ROUTES - No login required */}
-        <Route 
-          path="/" 
-          element={
-            <Home 
-              addToCart={addToCart} 
-              selectedCategory={selectedCategory}
+      <div id="root">
+        <Navbar onSelectCategory={handleCategorySelect} onClearCategory={handleClearCategory} />
+        
+        <main className="main-content-wrapper">
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <Home 
+                  addToCart={addToCart} 
+                  selectedCategory={selectedCategory}
+                />
+              } 
             />
-          } 
-        />
-        
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* ✅ Product details PUBLIC - View products without login */}
-        <Route path="/product/:id" element={<Product addToCart={addToCart} />} />
-        
-        {/* ✅ USER PROFILE ROUTE - Only for logged-in users */}
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <UserProfile />
-            </PrivateRoute>
-          }
-        />
-        
-        {/* ✅ USER ROUTES - Any logged-in user */}
-        {/* Cart is PUBLIC so visitors can manage items; checkout gates login inside Cart */}
-        <Route path="/cart" element={<Cart />} />
-        
-        {/* ✅ ADMIN ONLY ROUTES */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <PrivateRoute requiredRole="ROLE_ADMIN">
-              <AdminDashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <PrivateRoute requiredRole="ROLE_ADMIN">
-              <ManageUsers />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/admin/orders"
-          element={
-            <PrivateRoute requiredRole="ROLE_ADMIN">
-              <ManageOrders />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/add_product"
-          element={
-            <PrivateRoute requiredRole="ROLE_ADMIN">
-              <AddProduct />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/product/update/:id"
-          element={
-            <PrivateRoute>
-              <UpdateProduct />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
+            
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            <Route path="/product/:id" element={<Product addToCart={addToCart} />} />
+            
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <UserProfile />
+                </PrivateRoute>
+              }
+            />
+            
+            <Route path="/cart" element={<Cart />} />
+            
+            <Route
+              path="/admin/dashboard"
+              element={
+                <PrivateRoute requiredRole="ROLE_ADMIN">
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <PrivateRoute requiredRole="ROLE_ADMIN">
+                  <ManageUsers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <PrivateRoute requiredRole="ROLE_ADMIN">
+                  <ManageOrders />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/add_product"
+              element={
+                <PrivateRoute requiredRole="ROLE_ADMIN">
+                  <AddProduct />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/product/update/:id"
+              element={
+                <PrivateRoute requiredRole="ROLE_ADMIN">
+                  <UpdateProduct />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
     </AppProvider>
   );
 }

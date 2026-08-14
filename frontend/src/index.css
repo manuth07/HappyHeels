@@ -1,60 +1,225 @@
-.dark-theme{
-    --root_background: #1f1f1f;
-    --text_color: #ffffff;
-    --card_background: #2a2a2a;
-    --card_text: #e0e0e0;
+/* ==========================================================================
+   BRUTALIST MONOCHROME DESIGN SYSTEM - HAPPY HEELS
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  --color-canvas: #FFFFFF;
+  --color-text: #000000;
+  --color-accent: #E2FF00; /* Lime-Greenish Yellow */
+  --color-accent-dark: #000000;
+  --color-footer-bg: #000000;
+  --color-footer-text: #FFFFFF;
+  --color-border: #000000;
+  --color-muted: #666666;
+  --border-width: 2px;
+  --border-width-thick: 3px;
+  --shadow-block: 4px 4px 0px #000000;
+  --shadow-block-sm: 2px 2px 0px #000000;
+  --shadow-block-hover: 6px 6px 0px #000000;
+  --font-primary: 'Josefin Sans', sans-serif;
 }
 
-.light-theme{
-    --root_background: white;
-    --text_color: #000000;
-    --card_background: #ffffff;
-    --card_text: #2c3e50;
+/* --------------------------------------------------------------------------
+   STRICT GEOMETRY & TYPOGRAPHY RESET
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  border-radius: 0px !important;
+  box-sizing: border-box;
+  font-family: var(--font-primary) !important;
 }
 
-:root{
-    background-color: var(--root_background);
-    color: var(--text_color);
+html, body {
+  background-color: var(--color-canvas) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-primary) !important;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Dark mode specific overrides */
-.dark-theme .product-card {
-    background-color: #2a2a2a !important;
-    border-color: #444 !important;
+/* Headings and Triggers: Uppercase + Letter Spacing */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.btn, .nav-link, .navbar-brand,
+.badge, .dropdown-item, button, th,
+label, .title, .auth-title, .profile-title,
+.reviews-title, .modal-title, .product-title-lg {
+  font-family: var(--font-primary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
 }
 
-.dark-theme .card-body-flex {
-    color: #e0e0e0 !important;
+/* Base Body Links */
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
 }
 
-.dark-theme .card-brand {
-    color: #b0b0b0 !important;
+a:hover {
+  color: var(--color-text);
+  background-color: var(--color-accent);
 }
 
-.dark-theme .price-label {
-    color: #ffffff !important;
+/* --------------------------------------------------------------------------
+   FORM CONTROLS & INPUTS
+   -------------------------------------------------------------------------- */
+.form-control, .form-select, textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="tel"], input[type="file"], input[type="search"] {
+  background-color: var(--color-canvas) !important;
+  color: var(--color-text) !important;
+  border: var(--border-width) solid var(--color-border) !important;
+  border-radius: 0px !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  font-family: var(--font-primary) !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease-in-out !important;
 }
 
-.dark-theme .navbar {
-    background-color: #1f1f1f !important;
+.form-control:focus, .form-select:focus, textarea:focus, input:focus {
+  background-color: var(--color-canvas) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+  outline: 2px solid var(--color-text) !important;
+  box-shadow: var(--shadow-block-sm) !important;
 }
 
-.dark-theme .nav-link {
-    color: #e0e0e0 !important;
+.form-label {
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-bottom: 0.5rem !important;
+  color: var(--color-text) !important;
 }
 
-.dark-theme .nav-link:hover {
-    color: #ffffff !important;
+/* --------------------------------------------------------------------------
+   BUTTONS (SOLID BLACK DEFAULT -> LIME-GREEN HOVER)
+   -------------------------------------------------------------------------- */
+.btn, button.auth-button, button.cart-btn, button.submit-review-btn {
+  background-color: var(--color-text) !important;
+  color: var(--color-canvas) !important;
+  border: var(--border-width) solid var(--color-border) !important;
+  border-radius: 0px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+  box-shadow: var(--shadow-block-sm) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
 }
 
-.dark-theme .product-name-text {
-    color: #ffffff !important;
+.btn:hover, button.auth-button:hover, button.cart-btn:hover, button.submit-review-btn:hover:not(:disabled) {
+  background-color: var(--color-accent) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: var(--shadow-block) !important;
+  transform: translate(-2px, -2px) !important;
 }
 
-.light-theme .product-name-text {
-    color: #2c3e50 !important;
+.btn:active, button.auth-button:active {
+  transform: translate(0px, 0px) !important;
+  box-shadow: none !important;
 }
 
-.product-name-text {
-    color: #2c3e50;
+.btn-secondary, .btn-outline-primary, .btn-outline-secondary, .btn-light {
+  background-color: var(--color-canvas) !important;
+  color: var(--color-text) !important;
+  border: var(--border-width) solid var(--color-border) !important;
+}
+
+.btn-secondary:hover, .btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-light:hover {
+  background-color: var(--color-accent) !important;
+  color: var(--color-text) !important;
+  box-shadow: var(--shadow-block) !important;
+}
+
+.btn-danger, .btn-outline-danger {
+  background-color: var(--color-text) !important;
+  color: var(--color-canvas) !important;
+  border: var(--border-width) solid var(--color-border) !important;
+}
+
+.btn-danger:hover, .btn-outline-danger:hover {
+  background-color: #FF2E2E !important;
+  color: #FFFFFF !important;
+  box-shadow: var(--shadow-block) !important;
+}
+
+.btn:disabled, button:disabled {
+  background-color: #E0E0E0 !important;
+  color: #888888 !important;
+  border-color: #888888 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   BADGES & ACCENT TAGS
+   -------------------------------------------------------------------------- */
+.badge {
+  background-color: var(--color-accent) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0px !important;
+  padding: 0.35em 0.65em !important;
+  font-size: 0.8em !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+}
+
+.badge.bg-danger, .out-of-stock-badge {
+  background-color: var(--color-text) !important;
+  color: var(--color-canvas) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   MODALS & OVERLAYS
+   -------------------------------------------------------------------------- */
+.modal-content, .auth-modal-card {
+  background-color: var(--color-canvas) !important;
+  border: var(--border-width-thick) solid var(--color-border) !important;
+  border-radius: 0px !important;
+  box-shadow: var(--shadow-block-hover) !important;
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--color-border) !important;
+  background-color: var(--color-canvas) !important;
+  border-radius: 0px !important;
+}
+
+.modal-backdrop.show {
+  opacity: 0.7 !important;
+  background-color: #000000 !important;
+}
+
+/* --------------------------------------------------------------------------
+   TABLES
+   -------------------------------------------------------------------------- */
+.table {
+  border: var(--border-width) solid var(--color-border) !important;
+  border-collapse: collapse !important;
+}
+
+.table th, .table td {
+  border: 1px solid var(--color-border) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.table thead th {
+  background-color: var(--color-text) !important;
+  color: var(--color-canvas) !important;
+  border-bottom: var(--border-width) solid var(--color-border) !important;
 }

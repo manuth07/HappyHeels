@@ -29,7 +29,7 @@ const ManageOrders = () => {
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setError('Failed to fetch orders');
+      setError('FAILED TO FETCH ORDERS');
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,6 @@ const ManageOrders = () => {
         }
       });
       
-      // Update local state
       setOrders(orders.map(order => 
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
@@ -53,7 +52,7 @@ const ManageOrders = () => {
       setShowOrderModal(false);
     } catch (error) {
       console.error('Error updating order status:', error);
-      setError('Failed to update order status');
+      setError('FAILED TO UPDATE ORDER STATUS');
     } finally {
       setUpdating(false);
     }
@@ -75,29 +74,19 @@ const ManageOrders = () => {
       setShowBankSlipModal(true);
     } catch (error) {
       console.error('Error fetching bank slip:', error);
-      setError('Failed to load bank slip');
+      setError('FAILED TO LOAD BANK SLIP');
     }
   };
 
   const getStatusBadge = (status) => {
-    const variants = {
-      'PENDING': 'warning',
-      'CONFIRMED': 'info',
-      'PROCESSING': 'primary',
-      'SHIPPED': 'success',
-      'DELIVERED': 'success',
-      'CANCELLED': 'danger'
-    };
-    return <Badge bg={variants[status]}>{status}</Badge>;
+    return <Badge>{status}</Badge>;
   };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 
@@ -109,260 +98,195 @@ const ManageOrders = () => {
 
   if (loading) {
     return (
-      <Container className="mt-4">
-        <div className="text-center">
-          <Spinner animation="border" />
-          <p className="mt-2">Loading orders...</p>
-        </div>
+      <Container style={{ marginTop: '100px' }} className="text-center py-5">
+        <h4 className="fw-bold text-uppercase">LOADING ORDERS...</h4>
       </Container>
     );
   }
 
   return (
-    <Container className="mt-4">
+    <Container style={{ marginTop: '100px', marginBottom: '50px' }}>
       <Row>
         <Col>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2>
-              <i className="bi bi-clipboard-check me-2"></i>
-              Order Management
-            </h2>
+          <div className="d-flex justify-content-between align-items-center mb-4 p-3 border border-2 border-dark bg-white" style={{ boxShadow: '4px 4px 0px #000000' }}>
+            <h3 className="fw-bold text-uppercase mb-0">ORDER MANAGEMENT</h3>
             {pendingCount > 0 && (
               <Badge bg="danger" className="fs-6">
-                {pendingCount} Pending Orders
+                {pendingCount} PENDING
               </Badge>
             )}
           </div>
 
           {error && (
-            <Alert variant="danger" dismissible onClose={() => setError('')}>
+            <Alert variant="danger" dismissible onClose={() => setError('')} className="rounded-0 border-dark">
               {error}
             </Alert>
           )}
 
           {/* Filter Buttons */}
-          <div className="mb-3">
-            <Button
-              variant={filter === 'ALL' ? 'primary' : 'outline-primary'}
-              onClick={() => setFilter('ALL')}
-              className="me-2"
-            >
-              All Orders
-            </Button>
-            <Button
-              variant={filter === 'PENDING' ? 'warning' : 'outline-warning'}
-              onClick={() => setFilter('PENDING')}
-              className="me-2"
-            >
-              Pending
-            </Button>
-            <Button
-              variant={filter === 'CONFIRMED' ? 'info' : 'outline-info'}
-              onClick={() => setFilter('CONFIRMED')}
-              className="me-2"
-            >
-              Confirmed
-            </Button>
-            <Button
-              variant={filter === 'PROCESSING' ? 'primary' : 'outline-primary'}
-              onClick={() => setFilter('PROCESSING')}
-              className="me-2"
-            >
-              Processing
-            </Button>
-            <Button
-              variant={filter === 'SHIPPED' ? 'success' : 'outline-success'}
-              onClick={() => setFilter('SHIPPED')}
-              className="me-2"
-            >
-              Shipped
-            </Button>
+          <div className="mb-4 d-flex flex-wrap gap-2">
+            {['ALL', 'PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((f) => (
+              <Button
+                key={f}
+                variant={filter === f ? 'primary' : 'outline-primary'}
+                onClick={() => setFilter(f)}
+                className="btn-sm"
+              >
+                {f}
+              </Button>
+            ))}
           </div>
 
           {/* Orders Table */}
-          <Card>
-            <Card.Body>
-              {filteredOrders.length === 0 ? (
-                <div className="text-center py-4">
-                  <i className="bi bi-inbox display-1 text-muted"></i>
-                  <p className="text-muted">No orders found</p>
-                </div>
-              ) : (
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>Order ID</th>
-                      <th>Customer</th>
-                      <th>Total Amount</th>
-                      <th>Status</th>
-                      <th>Order Date</th>
-                      <th>Bank Slip</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredOrders.map((order) => (
-                      <tr key={order.id}>
-                        <td>
-                          <strong>#{order.id}</strong>
-                        </td>
-                        <td>
-                          <div>
-                            <strong>{order.customerName}</strong>
-                            <br />
-                            <small className="text-muted">{order.customerEmail}</small>
-                          </div>
-                        </td>
-                        <td>
-                          <strong>LKR {order.totalAmount}</strong>
-                        </td>
-                        <td>{getStatusBadge(order.status)}</td>
-                        <td>{formatDate(order.orderDate)}</td>
-                        <td>
-                          {order.hasBankSlip ? (
-                            <Button
-                              variant="outline-primary"
-                              size="sm"
-                              onClick={() => viewBankSlip(order.id)}
-                            >
-                              <i className="bi bi-eye me-1"></i>
-                              View Slip
-                            </Button>
-                          ) : (
-                            <Badge bg="secondary">No Slip</Badge>
-                          )}
-                        </td>
-                        <td>
+          <div className="border border-2 border-dark bg-white p-3" style={{ boxShadow: '4px 4px 0px #000000' }}>
+            {filteredOrders.length === 0 ? (
+              <div className="text-center py-5">
+                <h5 className="fw-bold text-uppercase">NO ORDERS FOUND</h5>
+              </div>
+            ) : (
+              <Table responsive hover className="mb-0">
+                <thead>
+                  <tr>
+                    <th>ORDER ID</th>
+                    <th>CUSTOMER</th>
+                    <th>TOTAL</th>
+                    <th>STATUS</th>
+                    <th>DATE</th>
+                    <th>SLIP</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order) => (
+                    <tr key={order.id}>
+                      <td><strong>#{order.id}</strong></td>
+                      <td>
+                        <div>
+                          <strong>{order.customerName}</strong>
+                          <br />
+                          <small className="text-muted">{order.customerEmail}</small>
+                        </div>
+                      </td>
+                      <td><strong>LKR {order.totalAmount}</strong></td>
+                      <td>{getStatusBadge(order.status)}</td>
+                      <td>{formatDate(order.orderDate)}</td>
+                      <td>
+                        {order.hasBankSlip ? (
                           <Button
                             variant="outline-primary"
                             size="sm"
-                            onClick={() => {
-                              setSelectedOrder(order);
-                              setShowOrderModal(true);
-                            }}
+                            onClick={() => viewBankSlip(order.id)}
                           >
-                            <i className="bi bi-gear me-1"></i>
-                            Manage
+                            VIEW SLIP
                           </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
-            </Card.Body>
-          </Card>
+                        ) : (
+                          <Badge bg="secondary">NO SLIP</Badge>
+                        )}
+                      </td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setShowOrderModal(true);
+                          }}
+                        >
+                          MANAGE
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </div>
         </Col>
       </Row>
 
       {/* Order Details Modal */}
-      <Modal show={showOrderModal} onHide={() => setShowOrderModal(false)} size="lg">
+      <Modal show={showOrderModal} onHide={() => setShowOrderModal(false)} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>
-            Order Details - #{selectedOrder?.id}
+          <Modal.Title className="fw-bold text-uppercase">
+            ORDER DETAILS - #{selectedOrder?.id}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedOrder && (
             <div>
-              <Row>
+              <Row className="g-3">
                 <Col md={6}>
-                  <h6><i className="bi bi-person me-2"></i>Customer Information</h6>
-                  <p><strong>Name:</strong> {selectedOrder.customerName}</p>
-                  <p><strong>Email:</strong> {selectedOrder.customerEmail}</p>
-                  <p><strong>Phone:</strong> {selectedOrder.customerPhone}</p>
-                  <p><strong>Address:</strong> {selectedOrder.shippingAddress}</p>
+                  <h6 className="fw-bold text-uppercase border-bottom border-dark pb-2">CUSTOMER DETAILS</h6>
+                  <p className="mb-1"><strong>NAME:</strong> {selectedOrder.customerName}</p>
+                  <p className="mb-1"><strong>EMAIL:</strong> {selectedOrder.customerEmail}</p>
+                  <p className="mb-1"><strong>PHONE:</strong> {selectedOrder.customerPhone}</p>
+                  <p className="mb-1"><strong>ADDRESS:</strong> {selectedOrder.shippingAddress}</p>
                 </Col>
                 <Col md={6}>
-                  <h6><i className="bi bi-cart me-2"></i>Order Information</h6>
-                  <p><strong>Total:</strong> LKR {selectedOrder.totalAmount}</p>
-                  <p><strong>Status:</strong> {getStatusBadge(selectedOrder.status)}</p>
-                  <p><strong>Order Date:</strong> {formatDate(selectedOrder.orderDate)}</p>
-                  <p><strong>Bank Slip:</strong> {selectedOrder.hasBankSlip ? 'Available' : 'Not provided'}</p>
+                  <h6 className="fw-bold text-uppercase border-bottom border-dark pb-2">ORDER INFO</h6>
+                  <p className="mb-1"><strong>TOTAL:</strong> LKR {selectedOrder.totalAmount}</p>
+                  <p className="mb-1"><strong>STATUS:</strong> {selectedOrder.status}</p>
+                  <p className="mb-1"><strong>DATE:</strong> {formatDate(selectedOrder.orderDate)}</p>
                 </Col>
               </Row>
 
-              <hr />
+              <hr className="border-dark" />
 
-              <h6><i className="bi bi-list-ul me-2"></i>Order Items</h6>
-              <div className="table-responsive">
-                <Table size="sm">
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Subtotal</th>
+              <h6 className="fw-bold text-uppercase mb-3">ITEMS</h6>
+              <Table size="sm" responsive>
+                <thead>
+                  <tr>
+                    <th>PRODUCT</th>
+                    <th>QTY</th>
+                    <th>PRICE</th>
+                    <th>SUBTOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedOrder.orderItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.productName}</td>
+                      <td>{item.quantity}</td>
+                      <td>LKR {item.price}</td>
+                      <td>LKR {item.subtotal}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {selectedOrder.orderItems.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.productName}</td>
-                        <td>{item.quantity}</td>
-                        <td>LKR {item.price}</td>
-                        <td>LKR {item.subtotal}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </div>
-
-              {selectedOrder.hasBankSlip && (
-                <div className="mt-3">
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => viewBankSlip(selectedOrder.id)}
-                  >
-                    <i className="bi bi-image me-2"></i>
-                    View Bank Slip
-                  </Button>
-                </div>
-              )}
+                  ))}
+                </tbody>
+              </Table>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 w-100 justify-content-end">
             <Form.Select
               value={selectedOrder?.status}
-              onChange={(e) => {
-                const newStatus = e.target.value;
-                setSelectedOrder({...selectedOrder, status: newStatus});
-              }}
+              onChange={(e) => setSelectedOrder({...selectedOrder, status: e.target.value})}
               disabled={updating}
+              style={{ maxWidth: '200px' }}
             >
-              <option value="PENDING">Pending</option>
-              <option value="CONFIRMED">Confirmed</option>
-              <option value="PROCESSING">Processing</option>
-              <option value="SHIPPED">Shipped</option>
-              <option value="DELIVERED">Delivered</option>
-              <option value="CANCELLED">Cancelled</option>
+              <option value="PENDING">PENDING</option>
+              <option value="CONFIRMED">CONFIRMED</option>
+              <option value="PROCESSING">PROCESSING</option>
+              <option value="SHIPPED">SHIPPED</option>
+              <option value="DELIVERED">DELIVERED</option>
+              <option value="CANCELLED">CANCELLED</option>
             </Form.Select>
             <Button
               variant="primary"
               onClick={() => updateOrderStatus(selectedOrder.id, selectedOrder.status)}
               disabled={updating}
             >
-              {updating ? (
-                <>
-                  <Spinner animation="border" size="sm" className="me-2" />
-                  Updating...
-                </>
-              ) : (
-                'Update Status'
-              )}
+              UPDATE STATUS
             </Button>
           </div>
         </Modal.Footer>
       </Modal>
 
       {/* Bank Slip Modal */}
-      <Modal show={showBankSlipModal} onHide={() => setShowBankSlipModal(false)} size="lg">
+      <Modal show={showBankSlipModal} onHide={() => setShowBankSlipModal(false)} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>
-            <i className="bi bi-receipt me-2"></i>
-            Bank Slip - Order #{selectedOrder?.id}
+          <Modal.Title className="fw-bold text-uppercase">
+            BANK SLIP - ORDER #{selectedOrder?.id}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center">
@@ -370,19 +294,15 @@ const ManageOrders = () => {
             <img
               src={bankSlipImage}
               alt="Bank Slip"
-              style={{ maxWidth: '100%', maxHeight: '500px' }}
-              className="border rounded"
+              style={{ maxWidth: '100%', maxHeight: '500px', border: '2px solid #000' }}
             />
           ) : (
-            <div className="py-4">
-              <Spinner animation="border" />
-              <p className="mt-2">Loading bank slip...</p>
-            </div>
+            <h5 className="fw-bold text-uppercase">LOADING SLIP...</h5>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowBankSlipModal(false)}>
-            Close
+            CLOSE
           </Button>
         </Modal.Footer>
       </Modal>
@@ -391,7 +311,3 @@ const ManageOrders = () => {
 };
 
 export default ManageOrders;
-
-
-
-

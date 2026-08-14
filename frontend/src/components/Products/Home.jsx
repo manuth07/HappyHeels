@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API from "../../axios"; // Use configured axios instance
+import API from "../../axios";
 import AppContext from "../../Context/Context";
 import unplugged from "../../assets/unplugged.png";
 
@@ -20,24 +20,16 @@ const Home = ({ selectedCategory }) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      console.log("Data received:", data);
       setIsLoadingImages(true);
       setImagesLoaded(false);
       
-      // Initialize products with no imageUrl first
       setProducts(data.map(product => ({ ...product, imageUrl: null })));
       
-      // Fetch images and update products
       const fetchImagesAndSetProducts = async () => {
-        console.log("Starting to fetch images for", data.length, "products");
-        
-        // Create a map to store image URLs
         const imageMap = new Map();
         
-        // Fetch all images in parallel
         const imagePromises = data.map(async (product) => {
           try {
-            console.log("Fetching image for product:", product.id);
             const response = await API.get(
               `/product/${product.id}/image`,
               { responseType: "blob" }
@@ -45,28 +37,22 @@ const Home = ({ selectedCategory }) => {
             
             if (response.data) {
               const imageUrl = URL.createObjectURL(response.data);
-              console.log("Image loaded for product:", product.id);
               imageMap.set(product.id, imageUrl);
             } else {
-              console.log("No image data for product:", product.id);
               imageMap.set(product.id, unplugged);
             }
           } catch (error) {
-            console.error("Error fetching image for product ID:", product.id, error);
             imageMap.set(product.id, unplugged);
           }
         });
         
-        // Wait for all images to load
         await Promise.all(imagePromises);
         
-        // Update products with loaded images
         const updatedProducts = data.map(product => ({
           ...product,
           imageUrl: imageMap.get(product.id)
         }));
         
-        console.log("All images processed, setting products");
         setProducts(updatedProducts);
         setIsLoadingImages(false);
         setImagesLoaded(true);
@@ -76,117 +62,85 @@ const Home = ({ selectedCategory }) => {
     }
   }, [data]);
 
-  // Filter products by selected category
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
     : products;
 
-  // Clear category filter - this will be handled by the parent component
   const clearCategoryFilter = () => {
     window.location.reload();
   };
 
-
   if (isError) {
     return (
-      <h2 className="text-center" style={{ padding: "18rem" }}>
-        <img src={unplugged} alt="Error" style={{ width: '100px', height: '100px' }}/>
-      </h2>
+      <div className="text-center py-5" style={{ marginTop: "100px" }}>
+        <h3 className="fw-bold uppercase">ERROR LOADING PRODUCTS</h3>
+      </div>
     );
   }
 
   if (!data || data.length === 0 || isLoadingImages || !imagesLoaded) {
     return (
-      <div className="text-center" style={{ padding: "18rem" }}>
-        <div className="spinner-border text-primary" role="status" style={{ width: '3rem', height: '3rem' }}>
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <h4 className="mt-3">Loading products...</h4>
+      <div className="text-center py-5" style={{ marginTop: "120px" }}>
+        <h4 className="fw-bold text-uppercase tracking-wider">LOADING COLLECTION...</h4>
       </div>
     );
   }
 
   return (
-    <>
-      {/* Category Filter Header - Simplified */}
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px" }}>
       {selectedCategory && (
-        <div className="category-filter-header-simple" style={{ 
-          marginTop: "80px", 
-          padding: "10px 20px",
-          textAlign: "center"
-        }}>
-          <span className="badge bg-primary me-2">
-            <i className="bi bi-funnel me-1"></i>
-            {selectedCategory}
-          </span>
+        <div className="d-flex align-items-center justify-content-between mb-4 p-3 border border-2 border-dark bg-light">
+          <div className="d-flex align-items-center gap-2">
+            <span className="badge fs-6">{selectedCategory}</span>
+            <span className="text-uppercase fw-bold">FILTER APPLIED</span>
+          </div>
           <button 
             className="btn btn-outline-secondary btn-sm"
             onClick={clearCategoryFilter}
           >
-            <i className="bi bi-x-circle me-1"></i>
-            Clear Filter
+            CLEAR FILTER
           </button>
         </div>
       )}
       
-      <div className="grid" style={{ marginTop: selectedCategory ? "20px" : "64px", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", padding: "20px" }}>
+      <div className="grid">
         {filteredProducts.length === 0 ? (
-          <h2
-            className="text-center"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            No Products Available
-          </h2>
+          <div className="text-center py-5 w-100">
+            <h3 className="fw-bold uppercase">NO PRODUCTS AVAILABLE IN THIS CATEGORY</h3>
+          </div>
         ) : (
           filteredProducts.map((product) => {
             const { id, brand, name, price, productAvailable, imageUrl } = product;
-            
-            // Debug: Log the first product to console
-            if (id === 11) {
-              console.log("Product ID 11 data:", { id, name, brand, price });
-            }
 
             return (
-              <div className={`card mb-3 product-card`} style={{ backgroundColor: productAvailable ? "#fff" : "#ccc" }} key={id}>
+              <div className="product-card" key={id}>
                 <Link
                   to={`/product/${id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", height: "100%" }}
                 >
+                  {/* Strict 1:1 Aspect Ratio Image Container */}
                   <div className="product-img-wrapper">
                     <img
                       src={imageUrl}
                       alt={name || brand}
                       className="product-img"
-                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
                     />
                   </div>
-                  <div className="card-body card-body-flex">
-                    <p className="card-brand" style={{ marginBottom: '5px' }}>
-                      <i className="bi bi-tag-fill me-1"></i>
-                      {brand}
-                    </p>
-                    <div className="product-name-text" style={{ 
-                      fontSize: '1.1rem', 
-                      fontWeight: '600',
-                      marginBottom: '8px',
-                      marginTop: '5px',
-                      lineHeight: '1.4'
-                    }}>
-                      {name || brand}
+
+                  <div className="card-body-flex">
+                    <div>
+                      <p className="card-brand">{brand}</p>
+                      <h4 className="product-name-text">{name || brand}</h4>
                     </div>
+
                     <div className="product-price-badge">
-                      <span className="price-label">Rs {price}</span>
+                      <span className="price-label">LKR {price}</span>
+                      {!productAvailable ? (
+                        <span className="out-of-stock-badge">OUT OF STOCK</span>
+                      ) : (
+                        <span className="badge">AVAILABLE</span>
+                      )}
                     </div>
-                    {!productAvailable && (
-                      <div className="out-of-stock-badge">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        Out of Stock
-                      </div>
-                    )}
                   </div>
                 </Link>
               </div>
@@ -194,7 +148,7 @@ const Home = ({ selectedCategory }) => {
           })
         )}
       </div>
-    </>
+    </div>
   );
 };
 
