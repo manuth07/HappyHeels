@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="col-lg-4 col-md-6">
             <h4 className="fw-bold text-white mb-3">HAPPY HEELS</h4>
             <p className="text-secondary small mb-3">
-              ULTRA-MINIMALIST, HIGH-CONTRAST MONOCHROME FOOTWEAR PLATFORM. DEFINED BY GEOMETRY AND UNCOMPROMISING STRUCTURE.
+              Sri Lanka made high quality foot wear
             </p>
           </div>
           <div className="col-lg-3 col-md-6">
@@ -38,7 +38,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-bottom">
-          &copy; {new Date().getFullYear()} HAPPY HEELS. ALL RIGHTS RESERVED. HIGH-CONTRAST MONOCHROME EDITION.
+          &copy; {new Date().getFullYear()} HAPPY HEELS. ALL RIGHTS RESERVED. 
         </div>
       </div>
     </footer>

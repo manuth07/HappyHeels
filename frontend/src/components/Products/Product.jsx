@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/Context";
 import API from "../../axios";
