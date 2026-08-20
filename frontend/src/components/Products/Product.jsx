@@ -22,15 +22,23 @@ const Product = () => {
         const fetched = response.data;
         setProduct(fetched);
 
-        try {
-          const imgRes = await API.get(`/product/${id}/image`, { responseType: "blob" });
-          if (imgRes?.data) {
-            setImageUrl(URL.createObjectURL(imgRes.data));
-          } else {
+        if (fetched.imageUrl) {
+          const serverBase = (API.defaults.baseURL || "http://localhost:8080/api").replace(/\/api\/?$/, "");
+          const fullUrl = fetched.imageUrl.startsWith("http")
+            ? fetched.imageUrl
+            : `${serverBase}${fetched.imageUrl}`;
+          setImageUrl(fullUrl);
+        } else {
+          try {
+            const imgRes = await API.get(`/product/${id}/image`, { responseType: "blob" });
+            if (imgRes?.data) {
+              setImageUrl(URL.createObjectURL(imgRes.data));
+            } else {
+              setImageUrl(unplugged);
+            }
+          } catch (imgErr) {
             setImageUrl(unplugged);
           }
-        } catch (imgErr) {
-          setImageUrl(unplugged);
         }
       } catch (error) {
         console.error("Error fetching product:", error);

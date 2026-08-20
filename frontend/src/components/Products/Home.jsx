@@ -22,13 +22,21 @@ const Home = ({ selectedCategory }) => {
     if (data && data.length > 0) {
       setIsLoadingImages(true);
       setImagesLoaded(false);
-      
-      setProducts(data.map(product => ({ ...product, imageUrl: null })));
+
+      const serverBase = (API.defaults.baseURL || "http://localhost:8080/api").replace(/\/api\/?$/, "");
       
       const fetchImagesAndSetProducts = async () => {
         const imageMap = new Map();
         
         const imagePromises = data.map(async (product) => {
+          if (product.imageUrl) {
+            const fullUrl = product.imageUrl.startsWith("http")
+              ? product.imageUrl
+              : `${serverBase}${product.imageUrl}`;
+            imageMap.set(product.id, fullUrl);
+            return;
+          }
+
           try {
             const response = await API.get(
               `/product/${product.id}/image`,
@@ -50,7 +58,7 @@ const Home = ({ selectedCategory }) => {
         
         const updatedProducts = data.map(product => ({
           ...product,
-          imageUrl: imageMap.get(product.id)
+          imageUrl: imageMap.get(product.id) || unplugged
         }));
         
         setProducts(updatedProducts);
