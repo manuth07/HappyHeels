@@ -14,7 +14,7 @@ const ManageUsers = () => {
       setError('');
     } catch (e) {
       console.error('Error fetching users:', e);
-      setError('FAILED TO LOAD USERS');
+      setError('Failed to load users');
     } finally {
       setLoading(false);
     }
@@ -25,48 +25,59 @@ const ManageUsers = () => {
   }, []);
 
   if (loading) {
-    return <div className="container-fluid max-width-1200 px-4 text-center" style={{ marginTop: '100px' }}><h4 className="fw-bold uppercase">LOADING USERS...</h4></div>;
+    return (
+      <div className="container-fluid max-width-1200 px-4 text-center" style={{ marginTop: '90px' }}>
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="subtitle">Loading users...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="container-fluid max-width-1200 px-4" style={{ marginTop: '100px' }}><div className="alert alert-danger">{error}</div></div>;
+    return (
+      <div className="container-fluid max-width-1200 px-4" style={{ marginTop: '90px' }}>
+        <div className="alert alert-danger">{error}</div>
+      </div>
+    );
   }
 
   return (
-    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: '100px', marginBottom: '50px' }}>
-      <div className="border border-2 border-dark bg-white" style={{ boxShadow: '4px 4px 0px #000000' }}>
-        <div className="border-bottom border-2 border-dark p-3 bg-white d-flex justify-content-between align-items-center">
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: '68px', marginBottom: '50px' }}>
+      <div className="border rounded-3 bg-white">
+        <div className="border-bottom p-3 bg-white d-flex justify-content-between align-items-center">
           <div>
-            <h4 className="fw-bold text-uppercase mb-0">MANAGE USERS</h4>
-            <small className="text-uppercase text-muted fw-bold">REGISTERED ACCOUNTS OVERVIEW</small>
+            <h4 className="section-title mb-0">Manage Users</h4>
+            <small className="subtitle">Registered customer accounts overview</small>
           </div>
           <button
-            className="btn btn-primary btn-sm"
+            className="btn btn-secondary btn-sm"
             onClick={fetchUsers}
             disabled={loading}
           >
-            {loading ? 'REFRESHING' : 'REFRESH'}
+            {loading ? 'Refreshing...' : 'Refresh'}
           </button>
         </div>
 
-        <div className="p-3 border-bottom border-dark bg-light">
-          <div className="row g-2">
+        <div className="p-3 border-bottom" style={{ backgroundColor: '#F7F7F8' }}>
+          <div className="row g-3">
             <div className="col-12 col-sm-4">
-              <div className="d-flex align-items-center p-2 border border-dark bg-white">
-                <span className="text-uppercase fw-bold small me-auto">TOTAL USERS</span>
-                <span className="fw-bold fs-5">{users.length}</span>
+              <div className="d-flex align-items-center p-3 border rounded-3 bg-white">
+                <span className="subtitle me-auto">Total Users</span>
+                <span className="fw-bold fs-5" style={{ color: '#111111' }}>{users.length}</span>
               </div>
             </div>
             <div className="col-12 col-sm-4">
-              <div className="d-flex align-items-center p-2 border border-dark bg-white">
-                <span className="text-uppercase fw-bold small me-auto">ADMINS</span>
-                <span className="fw-bold fs-5">{users.filter(u => u.role === 'ROLE_ADMIN').length}</span>
+              <div className="d-flex align-items-center p-3 border rounded-3 bg-white">
+                <span className="subtitle me-auto">Administrators</span>
+                <span className="fw-bold fs-5" style={{ color: '#7B2CBF' }}>{users.filter(u => u.role === 'ROLE_ADMIN').length}</span>
               </div>
             </div>
             <div className="col-12 col-sm-4">
-              <div className="d-flex align-items-center p-2 border border-dark bg-white">
-                <span className="text-uppercase fw-bold small me-auto">CUSTOMERS</span>
-                <span className="fw-bold fs-5">{users.filter(u => u.role === 'ROLE_CUSTOMER').length}</span>
+              <div className="d-flex align-items-center p-3 border rounded-3 bg-white">
+                <span className="subtitle me-auto">Customers</span>
+                <span className="fw-bold fs-5" style={{ color: '#111111' }}>{users.filter(u => u.role === 'ROLE_CUSTOMER').length}</span>
               </div>
             </div>
           </div>
@@ -76,23 +87,23 @@ const ManageUsers = () => {
           <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>NAME</th>
-                <th>EMAIL</th>
-                <th>PHONE</th>
-                <th>ADDRESS</th>
-                <th>ROLE</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Role</th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
                 <tr key={u.id}>
-                  <td className="fw-bold">{u.name || '-'}</td>
+                  <td className="fw-semibold" style={{ color: '#111111' }}>{u.name || '-'}</td>
                   <td>{u.email}</td>
                   <td>{u.phone || '-'}</td>
                   <td>{u.address || '-'}</td>
                   <td>
-                    <span className={`badge ${u.role === 'ROLE_ADMIN' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
-                      {u.role}
+                    <span className={`badge ${u.role === 'ROLE_ADMIN' ? 'badge-purple' : 'badge-neutral'}`}>
+                      {u.role === 'ROLE_ADMIN' ? 'Admin' : 'Customer'}
                     </span>
                   </td>
                 </tr>

@@ -59,7 +59,7 @@ const Cart = () => {
     if (!target) return;
     const nextQty = target.quantity + 1;
     if (nextQty > (target.stockQuantity || 999)) {
-      alert("CANNOT ADD MORE THAN AVAILABLE STOCK");
+      alert("Cannot add more than available stock");
       return;
     }
     await updateCartQuantity(itemId, nextQty);
@@ -90,84 +90,85 @@ const Cart = () => {
     clearCart();
     setCartItems([]);
     setShowModal(false);
-    alert('ORDER PLACED SUCCESSFULLY!');
+    alert('Order placed successfully!');
   };
 
   return (
-    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px", marginBottom: "50px" }}>
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "68px", marginBottom: "50px" }}>
       <div className="shopping-cart">
-        <div className="title">SHOPPING BAG ({cartItems.length})</div>
+        <div className="title">Shopping Bag ({cartItems.length})</div>
         {cartItems.length === 0 ? (
           <div className="text-center py-5">
-            <h4 className="fw-bold text-uppercase mb-3">YOUR BAG IS EMPTY</h4>
-            <p className="text-uppercase text-muted small">
-              EXPLORE OUR COLLECTION AND ADD STYLISH FOOTWEAR TO YOUR BAG.
+            <h4 className="h2 mb-2">Your bag is empty</h4>
+            <p className="subtitle">
+              Explore our collection and add stylish footwear to your bag.
             </p>
           </div>
         ) : (
           <>
             <div className="cart-items-list mb-4">
               {cartItems.map((item) => (
-                <div key={item.id} className="d-flex align-items-center justify-content-between p-3 mb-3 border border-2 border-dark bg-white" style={{ boxShadow: '3px 3px 0px #000' }}>
+                <div key={item.id} className="cart-item-card">
                   <div className="d-flex align-items-center gap-3">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      style={{ width: "80px", height: "80px", objectFit: "cover", border: "2px solid #000" }}
+                      style={{ width: "72px", height: "72px", objectFit: "cover", borderRadius: "6px", border: "1px solid #E5E5E5", backgroundColor: "#FFFFFF" }}
                     />
                     <div>
-                      <span className="text-uppercase text-muted small fw-bold d-block">{item.brand}</span>
-                      <h5 className="fw-bold text-uppercase mb-0">{item.name}</h5>
-                      <span className="fw-bold fs-6">LKR {item.price} EACH</span>
+                      <span className="subtitle d-block">{item.brand}</span>
+                      <h5 className="fw-semibold mb-1" style={{ fontSize: "15px", color: "#111111" }}>{item.name}</h5>
+                      <span className="fw-semibold" style={{ fontSize: "14px", color: "#111111" }}>LKR {item.price} each</span>
                     </div>
                   </div>
 
                   <div className="d-flex align-items-center gap-3">
-                    <div className="d-flex align-items-center border border-2 border-dark">
+                    {/* Quantity Pill Selector */}
+                    <div className="quantity-control">
                       <button
-                        className="btn btn-light btn-sm border-0 rounded-0 px-3 fw-bold"
                         onClick={() => handleDecreaseQuantity(item.id)}
                       >
                         -
                       </button>
-                      <span className="px-3 fw-bold">{item.quantity}</span>
+                      <span>{item.quantity}</span>
                       <button
-                        className="btn btn-light btn-sm border-0 rounded-0 px-3 fw-bold"
                         onClick={() => handleIncreaseQuantity(item.id)}
                       >
                         +
                       </button>
                     </div>
 
-                    <div className="fw-bold fs-5 min-w-120 text-end">
+                    <div className="fw-bold min-w-120 text-end" style={{ fontSize: "16px", color: "#111111" }}>
                       LKR {item.price * item.quantity}
                     </div>
 
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-light btn-pill text-danger btn-sm"
                       onClick={() => handleRemoveFromCart(item.id)}
+                      title="Remove item"
                     >
-                      REMOVE
+                      <i className="bi bi-trash"></i>
                     </button>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="total mb-4">
-              TOTAL: LKR {totalPrice.toFixed(2)}
+            <div className="total-banner mb-4">
+              <span>Total Amount</span>
+              <span>LKR {totalPrice.toFixed(2)}</span>
             </div>
             
             <Button
-              className="btn btn-primary w-100 py-3 fs-5"
+              className="btn btn-primary w-100 py-3 fs-6"
               onClick={handleCheckoutClick}
             >
-              {user || localStorage.getItem('token') ? 'PROCEED TO CHECKOUT' : 'LOGIN TO CHECKOUT'}
+              {user || localStorage.getItem('token') ? 'Proceed to Checkout' : 'Login to Checkout'}
             </Button>
             
             {!user && !localStorage.getItem('token') && (
-              <div className="p-3 bg-light border border-dark text-center mt-3 text-uppercase fw-bold small">
-                PLEASE LOGIN TO COMPLETE YOUR ORDER.
+              <div className="p-3 bg-light border rounded-3 text-center mt-3 subtitle">
+                Please log in to complete your purchase.
               </div>
             )}
           </>

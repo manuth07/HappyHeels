@@ -20,11 +20,11 @@ const Register = () => {
 
         const phoneDigitsOnly = phone.replace(/\D/g, '');
         if (phoneDigitsOnly.length !== 10) {
-            setError('PHONE NUMBER MUST BE EXACTLY 10 DIGITS');
+            setError('Phone number must be exactly 10 digits');
             return;
         }
         if (password !== confirmPassword) {
-            setError('PASSWORDS DO NOT MATCH');
+            setError('Passwords do not match');
             return;
         }
         try {
@@ -38,7 +38,7 @@ const Register = () => {
             navigate('/login');
         } catch (err) {
             console.error('Registration error:', err);
-            setError(err.response?.data?.message || 'REGISTRATION FAILED. PLEASE TRY AGAIN.');
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
         }
     };
 
@@ -56,73 +56,73 @@ const Register = () => {
                     onClick={() => navigate('/')}
                     title="Close"
                 >
-                    X
+                    <i className="bi bi-x-lg"></i>
                 </button>
-                <h2 className="auth-title">CREATE ACCOUNT</h2>
+                <h2 className="auth-title">Create Account</h2>
                 {error && <div className="alert alert-danger">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="nameInput">FULL NAME</label>
+                        <label className="form-label" htmlFor="nameInput">Full Name</label>
                         <input
                             type="text"
                             className="form-control"
                             id="nameInput"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="ENTER FULL NAME"
+                            placeholder="John Doe"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="emailInput">EMAIL ADDRESS</label>
+                        <label className="form-label" htmlFor="emailInput">Email Address</label>
                         <input
                             type="email"
                             className="form-control"
                             id="emailInput"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="ENTER EMAIL ADDRESS"
+                            placeholder="name@example.com"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="passwordInput">PASSWORD</label>
+                        <label className="form-label" htmlFor="passwordInput">Password</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             className="form-control"
                             id="passwordInput"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="ENTER PASSWORD"
+                            placeholder="Create password"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="confirmPasswordInput">CONFIRM PASSWORD</label>
+                        <label className="form-label" htmlFor="confirmPasswordInput">Confirm Password</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             className="form-control"
                             id="confirmPasswordInput"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            placeholder="RE-ENTER PASSWORD"
+                            placeholder="Confirm password"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="addressInput">SHIPPING ADDRESS</label>
+                        <label className="form-label" htmlFor="addressInput">Shipping Address</label>
                         <input
                             type="text"
                             className="form-control"
                             id="addressInput"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
-                            placeholder="ENTER COMPLETE ADDRESS"
+                            placeholder="Complete shipping address"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="phoneInput">PHONE NUMBER (10 DIGITS)</label>
+                        <label className="form-label" htmlFor="phoneInput">Phone Number (10 Digits)</label>
                         <input
                             type="tel"
                             className="form-control"
@@ -139,10 +139,10 @@ const Register = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="auth-button">REGISTER ACCOUNT</button>
+                    <button type="submit" className="auth-button">Create Account</button>
                 </form>
                 <p className="auth-link-text">
-                    ALREADY HAVE AN ACCOUNT? <Link to="/login">LOGIN HERE</Link>
+                    Already have an account? <Link to="/login">Sign in here</Link>
                 </p>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Modal, Form, Alert, Spinner, Table } from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, Modal, Form, Alert, Table } from 'react-bootstrap';
 import API from '../../axios';
 
 const ManageOrders = () => {
@@ -29,7 +29,7 @@ const ManageOrders = () => {
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setError('FAILED TO FETCH ORDERS');
+      setError('Failed to fetch orders');
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ const ManageOrders = () => {
       setShowOrderModal(false);
     } catch (error) {
       console.error('Error updating order status:', error);
-      setError('FAILED TO UPDATE ORDER STATUS');
+      setError('Failed to update order status');
     } finally {
       setUpdating(false);
     }
@@ -74,12 +74,25 @@ const ManageOrders = () => {
       setShowBankSlipModal(true);
     } catch (error) {
       console.error('Error fetching bank slip:', error);
-      setError('FAILED TO LOAD BANK SLIP');
+      setError('Failed to load bank slip');
     }
   };
 
   const getStatusBadge = (status) => {
-    return <Badge>{status}</Badge>;
+    switch (status) {
+      case 'PENDING':
+        return <span className="badge badge-purple">Pending</span>;
+      case 'CONFIRMED':
+      case 'PROCESSING':
+        return <span className="badge badge-dark">Processing</span>;
+      case 'SHIPPED':
+      case 'DELIVERED':
+        return <span className="badge badge-neutral">Delivered</span>;
+      case 'CANCELLED':
+        return <span className="badge bg-danger text-white">Cancelled</span>;
+      default:
+        return <span className="badge badge-neutral">{status}</span>;
+    }
   };
 
   const formatDate = (dateString) => {
@@ -98,62 +111,65 @@ const ManageOrders = () => {
 
   if (loading) {
     return (
-      <Container style={{ marginTop: '100px' }} className="text-center py-5">
-        <h4 className="fw-bold text-uppercase">LOADING ORDERS...</h4>
+      <Container style={{ marginTop: '90px' }} className="text-center py-5">
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="subtitle">Loading orders...</p>
       </Container>
     );
   }
 
   return (
-    <Container style={{ marginTop: '100px', marginBottom: '50px' }}>
+    <Container style={{ marginTop: '68px', marginBottom: '50px' }}>
       <Row>
         <Col>
-          <div className="d-flex justify-content-between align-items-center mb-4 p-3 border border-2 border-dark bg-white" style={{ boxShadow: '4px 4px 0px #000000' }}>
-            <h3 className="fw-bold text-uppercase mb-0">ORDER MANAGEMENT</h3>
+          <div className="d-flex justify-content-between align-items-center mb-4 p-3 border rounded-3 bg-white">
+            <h3 className="section-title mb-0">Order Management</h3>
             {pendingCount > 0 && (
-              <Badge bg="danger" className="fs-6">
-                {pendingCount} PENDING
-              </Badge>
+              <span className="badge badge-purple fs-6">
+                {pendingCount} Pending
+              </span>
             )}
           </div>
 
           {error && (
-            <Alert variant="danger" dismissible onClose={() => setError('')} className="rounded-0 border-dark">
+            <Alert variant="danger" dismissible onClose={() => setError('')} className="rounded-3">
               {error}
             </Alert>
           )}
 
-          {/* Filter Buttons */}
+          {/* Filter Buttons (Styleguide Horizontal Pills) */}
           <div className="mb-4 d-flex flex-wrap gap-2">
             {['ALL', 'PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].map((f) => (
-              <Button
+              <button
                 key={f}
-                variant={filter === f ? 'primary' : 'outline-primary'}
+                className={`filter-pill ${filter === f ? 'active' : ''}`}
                 onClick={() => setFilter(f)}
-                className="btn-sm"
               >
-                {f}
-              </Button>
+                {f === 'ALL' ? 'All Orders' : f}
+              </button>
             ))}
           </div>
 
           {/* Orders Table */}
-          <div className="border border-2 border-dark bg-white p-3" style={{ boxShadow: '4px 4px 0px #000000' }}>
+          <div className="border rounded-3 bg-white p-3">
             {filteredOrders.length === 0 ? (
               <div className="text-center py-5">
-                <h5 className="fw-bold text-uppercase">NO ORDERS FOUND</h5>
+                <h5 className="h2 mb-2">No orders found</h5>
+                <p className="subtitle">There are no orders under this filter.</p>
               </div>
             ) : (
-              <Table responsive hover className="mb-0">
+              <Table responsive hover className="mb-0 align-middle">
                 <thead>
                   <tr>
-                    <th>ORDER ID</th>
-                    <th>CUSTOMER</th>
-                    <th>TOTAL</th>
-                    <th>STATUS</th>
-                    <th>DATE</th>
-                    <th>SLIP</th>
-                    <th>ACTION</th>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Slip</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -162,9 +178,9 @@ const ManageOrders = () => {
                       <td><strong>#{order.id}</strong></td>
                       <td>
                         <div>
-                          <strong>{order.customerName}</strong>
+                          <strong style={{ color: '#111111' }}>{order.customerName}</strong>
                           <br />
-                          <small className="text-muted">{order.customerEmail}</small>
+                          <small className="subtitle">{order.customerEmail}</small>
                         </div>
                       </td>
                       <td><strong>LKR {order.totalAmount}</strong></td>
@@ -172,28 +188,26 @@ const ManageOrders = () => {
                       <td>{formatDate(order.orderDate)}</td>
                       <td>
                         {order.hasBankSlip ? (
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
+                          <button
+                            className="btn btn-secondary btn-sm"
                             onClick={() => viewBankSlip(order.id)}
                           >
-                            VIEW SLIP
-                          </Button>
+                            View Slip
+                          </button>
                         ) : (
-                          <Badge bg="secondary">NO SLIP</Badge>
+                          <span className="badge badge-neutral">No Slip</span>
                         )}
                       </td>
                       <td>
-                        <Button
-                          variant="primary"
-                          size="sm"
+                        <button
+                          className="btn btn-primary btn-sm"
                           onClick={() => {
                             setSelectedOrder(order);
                             setShowOrderModal(true);
                           }}
                         >
-                          MANAGE
-                        </Button>
+                          Manage
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -206,40 +220,40 @@ const ManageOrders = () => {
 
       {/* Order Details Modal */}
       <Modal show={showOrderModal} onHide={() => setShowOrderModal(false)} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title className="fw-bold text-uppercase">
-            ORDER DETAILS - #{selectedOrder?.id}
+        <Modal.Header closeButton className="border-bottom">
+          <Modal.Title className="section-title mb-0">
+            Order Details - #{selectedOrder?.id}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="py-4">
           {selectedOrder && (
             <div>
               <Row className="g-3">
                 <Col md={6}>
-                  <h6 className="fw-bold text-uppercase border-bottom border-dark pb-2">CUSTOMER DETAILS</h6>
-                  <p className="mb-1"><strong>NAME:</strong> {selectedOrder.customerName}</p>
-                  <p className="mb-1"><strong>EMAIL:</strong> {selectedOrder.customerEmail}</p>
-                  <p className="mb-1"><strong>PHONE:</strong> {selectedOrder.customerPhone}</p>
-                  <p className="mb-1"><strong>ADDRESS:</strong> {selectedOrder.shippingAddress}</p>
+                  <h6 className="fw-semibold border-bottom pb-2 mb-2" style={{ color: '#111111' }}>Customer Details</h6>
+                  <p className="mb-1 subtitle"><strong>Name:</strong> {selectedOrder.customerName}</p>
+                  <p className="mb-1 subtitle"><strong>Email:</strong> {selectedOrder.customerEmail}</p>
+                  <p className="mb-1 subtitle"><strong>Phone:</strong> {selectedOrder.customerPhone}</p>
+                  <p className="mb-1 subtitle"><strong>Address:</strong> {selectedOrder.shippingAddress}</p>
                 </Col>
                 <Col md={6}>
-                  <h6 className="fw-bold text-uppercase border-bottom border-dark pb-2">ORDER INFO</h6>
-                  <p className="mb-1"><strong>TOTAL:</strong> LKR {selectedOrder.totalAmount}</p>
-                  <p className="mb-1"><strong>STATUS:</strong> {selectedOrder.status}</p>
-                  <p className="mb-1"><strong>DATE:</strong> {formatDate(selectedOrder.orderDate)}</p>
+                  <h6 className="fw-semibold border-bottom pb-2 mb-2" style={{ color: '#111111' }}>Order Info</h6>
+                  <p className="mb-1 subtitle"><strong>Total:</strong> LKR {selectedOrder.totalAmount}</p>
+                  <p className="mb-1 subtitle"><strong>Status:</strong> {selectedOrder.status}</p>
+                  <p className="mb-1 subtitle"><strong>Date:</strong> {formatDate(selectedOrder.orderDate)}</p>
                 </Col>
               </Row>
 
-              <hr className="border-dark" />
+              <hr className="my-3 border-light" />
 
-              <h6 className="fw-bold text-uppercase mb-3">ITEMS</h6>
-              <Table size="sm" responsive>
+              <h6 className="fw-semibold mb-3" style={{ color: '#111111' }}>Items</h6>
+              <Table size="sm" responsive className="align-middle">
                 <thead>
                   <tr>
-                    <th>PRODUCT</th>
-                    <th>QTY</th>
-                    <th>PRICE</th>
-                    <th>SUBTOTAL</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -256,7 +270,7 @@ const ManageOrders = () => {
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="border-top pt-3">
           <div className="d-flex gap-2 w-100 justify-content-end">
             <Form.Select
               value={selectedOrder?.status}
@@ -276,7 +290,7 @@ const ManageOrders = () => {
               onClick={() => updateOrderStatus(selectedOrder.id, selectedOrder.status)}
               disabled={updating}
             >
-              UPDATE STATUS
+              Update Status
             </Button>
           </div>
         </Modal.Footer>
@@ -284,25 +298,27 @@ const ManageOrders = () => {
 
       {/* Bank Slip Modal */}
       <Modal show={showBankSlipModal} onHide={() => setShowBankSlipModal(false)} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title className="fw-bold text-uppercase">
-            BANK SLIP - ORDER #{selectedOrder?.id}
+        <Modal.Header closeButton className="border-bottom">
+          <Modal.Title className="section-title mb-0">
+            Bank Slip - Order #{selectedOrder?.id}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="text-center">
+        <Modal.Body className="text-center py-4">
           {bankSlipImage ? (
             <img
               src={bankSlipImage}
               alt="Bank Slip"
-              style={{ maxWidth: '100%', maxHeight: '500px', border: '2px solid #000' }}
+              style={{ maxWidth: '100%', maxHeight: '500px', borderRadius: '8px', border: '1px solid #E5E5E5' }}
             />
           ) : (
-            <h5 className="fw-bold text-uppercase">LOADING SLIP...</h5>
+            <div className="spinner-border text-dark" role="status">
+              <span className="visually-hidden">Loading slip...</span>
+            </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowBankSlipModal(false)}>
-            CLOSE
+        <Modal.Footer className="border-top pt-3">
+          <Button variant="secondary" className="btn-light" onClick={() => setShowBankSlipModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

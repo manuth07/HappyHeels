@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/Context";
 import API from "../../axios";
@@ -49,7 +49,7 @@ const Product = () => {
   }, [id]);
 
   const deleteProduct = async () => {
-    if (!window.confirm("ARE YOU SURE YOU WANT TO DELETE THIS PRODUCT?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
       await API.delete(`/product/${id}`);
       removeFromCart(id);
@@ -81,13 +81,16 @@ const Product = () => {
   if (!product) {
     return (
       <div className="text-center py-5" style={{ marginTop: "120px" }}>
-        <h4 className="fw-bold text-uppercase">LOADING PRODUCT DETAILS...</h4>
+        <div className="spinner-border text-dark mb-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="subtitle">Loading product details...</p>
       </div>
     );
   }
 
   return (
-    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px" }}>
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "68px" }}>
       <div className="containers mb-5">
         <img
           className="left-column-img"
@@ -97,29 +100,29 @@ const Product = () => {
 
         <div className="right-column">
           <div className="product-description">
-            <div className="d-flex align-items-center justify-content-between mb-2">
-              <span className="badge fs-6">{product.category}</span>
-              <span className="text-uppercase fw-bold small">
-                LISTED: {product.date ? new Date(product.date).toLocaleDateString() : '-'}
+            <div className="d-flex align-items-center justify-content-between mb-3">
+              <span className="badge badge-purple">{product.category}</span>
+              <span className="subtitle">
+                Listed: {product.date ? new Date(product.date).toLocaleDateString() : '-'}
               </span>
             </div>
             
             <h1 className="product-title-lg">
               {product.name}
             </h1>
-            <p className="fw-bold text-uppercase tracking-wider text-muted mb-4">{product.brand}</p>
+            <p className="subtitle mb-3" style={{ fontSize: "15px" }}>{product.brand}</p>
             
-            <p className="desc-label">DESCRIPTION:</p>
-            <p className="mb-4 lead fs-6">{product.description}</p>
+            <p className="desc-label">Description</p>
+            <p className="body-text text-secondary mb-4">{product.description}</p>
           </div>
 
           <div className="product-price">
-            <div className="d-flex align-items-center gap-3 mb-3">
-              <span className="fs-1 fw-bold tracking-wider">
+            <div className="d-flex align-items-center gap-3 mb-4">
+              <span style={{ fontSize: "28px", fontWeight: "700", color: "#111111" }}>
                 LKR {product.price}
               </span>
-              <span className="badge bg-light text-dark border border-dark">
-                STOCK: {product.stockQuantity} UNITS
+              <span className="badge badge-neutral">
+                Stock: {product.stockQuantity} units
               </span>
             </div>
             
@@ -132,20 +135,22 @@ const Product = () => {
                 onClick={handlAddToCart}
                 disabled={!product.productAvailable}
               >
-                {product.productAvailable ? "ADD TO BAG" : "OUT OF STOCK"}
+                <i className="bi bi-bag me-1"></i>
+                {product.productAvailable ? "Add to Bag" : "Out of Stock"}
               </button>
               
               <button
                 className="view-reviews-btn"
                 onClick={scrollToReviews}
               >
-                CUSTOMER REVIEWS
+                <i className="bi bi-chat-left-text me-1"></i>
+                Customer Reviews
               </button>
             </div>
 
             {!localStorage.getItem('token') && (
-              <p className="small text-uppercase fw-bold text-muted mt-2">
-                VISITOR MODE: ADD ITEMS TO BAG AND LOGIN AT CHECKOUT.
+              <p className="subtitle mt-2">
+                Visitor mode: Add items to bag and login at checkout.
               </p>
             )}
           </div>
@@ -158,14 +163,14 @@ const Product = () => {
                 type="button"
                 onClick={handleEditClick}
               >
-                EDIT PRODUCT
+                <i className="bi bi-pencil me-1"></i> Edit Product
               </button>
               <button
                 className="delete-btn"
                 type="button"
                 onClick={deleteProduct}
               >
-                DELETE PRODUCT
+                <i className="bi bi-trash me-1"></i> Delete Product
               </button>
             </div>
           )}

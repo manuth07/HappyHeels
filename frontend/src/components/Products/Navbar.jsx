@@ -52,13 +52,14 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
   return (
     <header>
       <nav className="navbar navbar-expand-lg">
-        <div className="container-fluid">
+        <div className="container-fluid max-width-1200">
           <Link className="navbar-brand me-4" to="/">
-            HAPPY HEELS
+            Happy Heels
+            <span className="brand-badge">FLX</span>
           </Link>
 
           <button
-            className="navbar-toggler"
+            className="navbar-toggler border-0"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -73,7 +74,7 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
               <li className="nav-item">
                 <Link className="nav-link" to="/">
-                  COLLECTION
+                  Collection
                 </Link>
               </li>
 
@@ -81,12 +82,12 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
                 <>
                   <li className="nav-item">
                     <Link className="nav-link" to="/admin/dashboard">
-                      DASHBOARD
+                      Dashboard
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link" to="/add_product">
-                      ADD PRODUCT
+                      Add Product
                     </Link>
                   </li>
                 </>
@@ -100,7 +101,7 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  CATEGORIES
+                  Categories
                 </Link>
                 <ul className="dropdown-menu">
                   <li>
@@ -110,7 +111,7 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
                         if (onClearCategory) onClearCategory();
                       }}
                     >
-                      ALL PRODUCTS
+                      All Footwear
                     </button>
                   </li>
                   {categories.map((cat) => (
@@ -127,12 +128,13 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
               </li>
             </ul>
 
-            {/* Search Bar */}
+            {/* Search Bar (Styleguide Spec: Height 40px, Pill radius, hair line border, #6E6E73 icon) */}
             <div className="search-container me-3 mb-2 mb-lg-0">
+              <i className="bi bi-search search-icon"></i>
               <input
-                className="form-control"
+                className="form-control search-input-pill"
                 type="search"
-                placeholder="SEARCH PRODUCTS..."
+                placeholder="Search products..."
                 aria-label="Search"
                 value={input}
                 onChange={(e) => handleChange(e.target.value)}
@@ -146,17 +148,18 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
                       <li key={result.id} className="list-group-item">
                         <Link
                           to={`/product/${result.id}`}
-                          className="text-dark fw-bold text-decoration-none d-block"
+                          className="text-dark d-block"
                           onClick={() => setShowSearchResults(false)}
                         >
-                          {result.name}
+                          <span className="fw-medium">{result.name}</span>
+                          <span className="text-muted ms-2 small">LKR {result.price}</span>
                         </Link>
                       </li>
                     ))
                   ) : (
                     noResults && (
-                      <li className="list-group-item text-danger fw-bold">
-                        NO PRODUCTS FOUND
+                      <li className="list-group-item text-muted text-center py-2">
+                        No products found
                       </li>
                     )
                   )}
@@ -166,29 +169,29 @@ const Navbar = ({ onSelectCategory, onClearCategory }) => {
 
             {/* User Actions */}
             <div className="d-flex align-items-center gap-2">
-              <Link to="/cart" className="btn btn-outline-primary btn-sm">
-                BAG
+              <Link to="/cart" className="btn btn-secondary btn-pill">
+                <i className="bi bi-bag me-1"></i> Bag
               </Link>
 
               {isAuthenticated ? (
                 <>
-                  <Link to="/profile" className="btn btn-outline-secondary btn-sm">
-                    PROFILE
+                  <Link to="/profile" className="btn btn-light btn-pill">
+                    <i className="bi bi-person me-1"></i> Profile
                   </Link>
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="btn btn-light btn-pill text-danger"
                     onClick={handleLogout}
                   >
-                    LOGOUT
+                    Logout
                   </button>
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="btn btn-outline-primary btn-sm">
-                    LOGIN
+                  <Link to="/login" className="btn btn-light btn-pill">
+                    Sign In
                   </Link>
-                  <Link to="/register" className="btn btn-primary btn-sm">
-                    REGISTER
+                  <Link to="/register" className="btn btn-primary btn-pill">
+                    Join Us
                   </Link>
                 </>
               )}

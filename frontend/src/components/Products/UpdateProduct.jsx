@@ -63,12 +63,12 @@ const UpdateProduct = () => {
         },
       })
       .then((response) => {
-        alert("PRODUCT UPDATED SUCCESSFULLY!");
+        alert("Product updated successfully!");
         navigate(`/product/${id}`);
       })
       .catch((error) => {
         console.error("Error updating product:", error);
-        alert("FAILED TO UPDATE PRODUCT. PLEASE TRY AGAIN.");
+        alert("Failed to update product. Please try again.");
       });
   };
  
@@ -85,12 +85,12 @@ const UpdateProduct = () => {
   };
   
   return (
-    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px", marginBottom: "50px" }}>
-      <div className="border border-2 border-dark p-4 bg-white" style={{ boxShadow: '4px 4px 0px #000000' }}>
-        <h2 className="fw-bold text-uppercase mb-4 border-bottom border-dark pb-3">UPDATE PRODUCT #{id}</h2>
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "68px", marginBottom: "50px" }}>
+      <div className="border rounded-3 p-4 bg-white">
+        <h2 className="section-title mb-4 border-bottom pb-3">Update Product #{id}</h2>
         <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
-            <label className="form-label">NAME</label>
+            <label className="form-label">Name *</label>
             <input
               type="text"
               className="form-control"
@@ -100,7 +100,7 @@ const UpdateProduct = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">BRAND</label>
+            <label className="form-label">Brand *</label>
             <input
               type="text"
               name="brand"
@@ -110,17 +110,17 @@ const UpdateProduct = () => {
             />
           </div>
           <div className="col-12">
-            <label className="form-label">DESCRIPTION</label>
-            <input
-              type="text"
+            <label className="form-label">Description *</label>
+            <textarea
               className="form-control"
+              rows={3}
               name="description"
               onChange={handleChange}
               value={updateProduct.description}
             />
           </div>
           <div className="col-md-4">
-            <label className="form-label">PRICE (LKR)</label>
+            <label className="form-label">Price (LKR) *</label>
             <input
               type="number"
               className="form-control"
@@ -130,14 +130,14 @@ const UpdateProduct = () => {
             />
           </div>
           <div className="col-md-4">
-            <label className="form-label">CATEGORY</label>
+            <label className="form-label">Category *</label>
             <select
               className="form-select"
               value={updateProduct.category}
               onChange={handleChange}
               name="category"
             >
-              <option value="">SELECT CATEGORY</option>
+              <option value="">Select Category</option>
               <option value="Gents">Gents</option>
               <option value="Ladies">Ladies</option>
               <option value="Kids">Kids</option>
@@ -146,7 +146,7 @@ const UpdateProduct = () => {
           </div>
 
           <div className="col-md-4">
-            <label className="form-label">STOCK QUANTITY</label>
+            <label className="form-label">Stock Quantity *</label>
             <input
               type="number"
               className="form-control"
@@ -156,17 +156,18 @@ const UpdateProduct = () => {
             />
           </div>
           <div className="col-md-12">
-            <label className="form-label">PRODUCT IMAGE</label>
+            <label className="form-label">Product Image</label>
             {image && (
               <div className="mb-2">
                 <img
                   src={URL.createObjectURL(image)}
                   alt="Product preview"
                   style={{
-                    width: "150px",
-                    height: "150px",
+                    width: "120px",
+                    height: "120px",
                     objectFit: "cover",
-                    border: "2px solid #000"
+                    borderRadius: "6px",
+                    border: "1px solid #E5E5E5"
                   }}
                 />
               </div>
@@ -189,15 +190,15 @@ const UpdateProduct = () => {
                   setUpdateProduct({ ...updateProduct, productAvailable: e.target.checked })
                 }
               />
-              <label className="form-check-label text-uppercase fw-bold" htmlFor="gridCheck">
-                PRODUCT AVAILABLE
+              <label className="form-check-label fw-medium" htmlFor="gridCheck">
+                Product Available for Purchase
               </label>
             </div>
           </div>
 
           <div className="col-12 mt-4">
             <button type="submit" className="btn btn-primary">
-              UPDATE PRODUCT
+              Update Product
             </button>
           </div>
         </form>

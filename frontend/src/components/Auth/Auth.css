@@ -1,14 +1,15 @@
 /* ==========================================================================
-   BRUTALIST MONOCHROME AUTH STYLES - HAPPY HEELS
+   MODERN MINIMALIST AUTH STYLES - HAPPY HEELS
    ========================================================================== */
 
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 160px);
   background-color: #FFFFFF !important;
   padding: 20px;
+  margin-top: 80px;
 }
 
 .auth-modal-overlay {
@@ -17,144 +18,134 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(4px);
 }
 
 .auth-card, .auth-modal-card {
   background-color: #FFFFFF !important;
-  border: 3px solid #000000 !important;
-  border-radius: 0px !important;
-  box-shadow: 6px 6px 0px #000000 !important;
-  padding: 2.5rem 2rem 2rem !important;
+  border: 1px solid #E5E5E5 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+  padding: 2rem !important;
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   text-align: left;
   position: relative;
 }
 
 .auth-title {
-  font-size: 2rem !important;
-  color: #000000 !important;
-  margin-bottom: 1.5rem !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 24px !important;
+  color: #111111 !important;
+  margin-bottom: 1.25rem !important;
   font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 2px !important;
+  letter-spacing: -0.02em !important;
   text-align: center;
-  border-bottom: 2px solid #000000;
-  padding-bottom: 0.5rem;
 }
 
 .login-type-tabs {
   display: flex;
-  margin-bottom: 1.5rem;
-  border: 2px solid #000000;
-  border-radius: 0px !important;
-  overflow: hidden;
+  margin-bottom: 1.25rem;
+  border: 1px solid #E5E5E5;
+  border-radius: 9999px !important;
+  padding: 3px;
+  background: #F7F7F8 !important;
 }
 
 .login-type-tabs .tab {
   flex: 1;
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem;
   border: none !important;
-  background: #FFFFFF !important;
-  color: #000000 !important;
+  border-radius: 9999px !important;
+  background: transparent !important;
+  color: #6E6E73 !important;
   cursor: pointer;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
   transition: all 0.15s ease;
   box-shadow: none !important;
 }
 
 .login-type-tabs .tab.active {
-  background: #000000 !important;
+  background: #111111 !important;
   color: #FFFFFF !important;
 }
 
 .login-type-tabs .tab:hover:not(.active) {
-  background: #E2FF00 !important;
-  color: #000000 !important;
+  color: #111111 !important;
 }
 
 .close-button {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #FFFFFF !important;
-  border: 2px solid #000000 !important;
-  border-radius: 0px !important;
-  font-size: 1.2rem;
-  color: #000000 !important;
+  top: 16px;
+  right: 16px;
+  background: transparent !important;
+  border: none !important;
+  font-size: 1.25rem;
+  color: #6E6E73 !important;
   cursor: pointer;
   width: 32px;
   height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 2px 2px 0px #000000 !important;
   transition: all 0.15s ease;
 }
 
 .close-button:hover {
-  background-color: #E2FF00 !important;
-  transform: translate(-1px, -1px);
+  background-color: #F7F7F8 !important;
+  color: #111111 !important;
 }
 
 .auth-button {
   width: 100%;
-  padding: 0.85rem 1rem !important;
-  background-color: #000000 !important;
+  padding: 0.75rem 1rem !important;
+  background-color: #111111 !important;
   color: #FFFFFF !important;
-  border: 2px solid #000000 !important;
-  border-radius: 0px !important;
-  font-size: 1.05rem !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1.5px !important;
+  border: 1px solid #111111 !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
   cursor: pointer;
   transition: all 0.15s ease;
   margin-top: 1rem;
-  box-shadow: 3px 3px 0px #000000 !important;
 }
 
 .auth-button:hover {
-  background-color: #E2FF00 !important;
-  color: #000000 !important;
-  box-shadow: 5px 5px 0px #000000 !important;
-  transform: translate(-2px, -2px);
+  background-color: #222222 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
 }
 
 .auth-link-text {
-  margin-top: 1.5rem;
-  color: #000000;
+  margin-top: 1.25rem;
+  color: #6E6E73;
   text-align: center;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-size: 13px;
 }
 
 .auth-link-text a {
-  color: #000000;
-  font-weight: 700;
+  color: #111111;
+  font-weight: 600;
   text-decoration: underline;
 }
 
 .auth-link-text a:hover {
-  background-color: #E2FF00;
+  color: #7B2CBF;
 }
 
 .alert-danger {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-  border: 2px solid #000000 !important;
-  border-radius: 0px !important;
-  font-weight: 600;
+  background-color: #FFF5F5 !important;
+  color: #DC3545 !important;
+  border: 1px solid #FEB2B2 !important;
+  border-radius: 8px !important;
+  font-weight: 500;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-size: 13px;
 }

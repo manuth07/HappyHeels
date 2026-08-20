@@ -1,62 +1,62 @@
-/* Reviews Section Styles - Brutalist Monochrome */
+/* Reviews Section Styles - Clean Modern Styleguide */
 
 .reviews-section {
   margin-top: 2rem;
-  padding: 2rem;
-  border: 2px solid #000000;
-  border-radius: 0px !important;
-  box-shadow: 4px 4px 0px #000000;
+  padding: 1.75rem;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px !important;
   background-color: #FFFFFF;
 }
 
 .reviews-title {
-  color: #000000;
-  font-weight: 700;
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #111111;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.01em;
 }
 
 .add-review-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  border: 2px solid #000000;
-  border-radius: 0px !important;
-  background: #FFFFFF;
+  margin-bottom: 1.75rem;
+  padding: 1.25rem;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px !important;
+  background: #F7F7F8;
 }
 
 .star {
-  font-size: 1.5rem;
-  color: #CCCCCC;
+  font-size: 1.25rem;
+  color: #D1D1D6;
+  transition: color 0.15s ease;
 }
 
 .star.filled {
-  color: #000000;
+  color: #111111;
 }
 
 .star.interactive:hover {
-  color: #000000;
+  color: #7B2CBF;
+  cursor: pointer;
 }
 
 .review-card {
   background: #FFFFFF;
-  border: 2px solid #000000;
-  border-radius: 0px !important;
-  box-shadow: 3px 3px 0px #000000;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .review-card-header {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #E5E5E5;
   padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .reviewer-name {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111111;
 }

@@ -1,12 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Modal, Button, Form, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Alert } from 'react-bootstrap';
 import API from '../../axios';
 import AppContext from '../../Context/Context';
-import { useNavigate } from 'react-router-dom';
 
 const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSuccess }) => {
   const { user } = useContext(AppContext);
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     customerName: user?.name || '',
     customerEmail: user?.email || '',
@@ -31,12 +29,12 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
     if (file) {
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
       if (!allowedTypes.includes(file.type)) {
-        setError('PLEASE UPLOAD A VALID IMAGE (JPEG, PNG) OR PDF FILE');
+        setError('Please upload a valid image (JPEG, PNG) or PDF file.');
         return;
       }
       
       if (file.size > 10 * 1024 * 1024) {
-        setError('FILE SIZE MUST BE LESS THAN 10MB');
+        setError('File size must be less than 10MB.');
         return;
       }
       
@@ -50,28 +48,28 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
     
     const token = localStorage.getItem('token');
     if (!token || !user) {
-      setError('PLEASE LOGIN TO PLACE AN ORDER');
+      setError('Please log in to place an order.');
       return;
     }
     
     if (!formData.customerName.trim()) {
-      setError('PLEASE ENTER YOUR FULL NAME');
+      setError('Please enter your full name.');
       return;
     }
     if (!formData.customerEmail.trim()) {
-      setError('PLEASE ENTER YOUR EMAIL');
+      setError('Please enter your email address.');
       return;
     }
     if (!formData.customerPhone.trim()) {
-      setError('PLEASE ENTER YOUR PHONE NUMBER');
+      setError('Please enter your phone number.');
       return;
     }
     if (!formData.shippingAddress.trim()) {
-      setError('PLEASE ENTER YOUR SHIPPING ADDRESS');
+      setError('Please enter your shipping address.');
       return;
     }
     if (!bankSlip) {
-      setError('PLEASE UPLOAD A BANK SLIP');
+      setError('Please upload a payment bank slip.');
       return;
     }
 
@@ -98,7 +96,7 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
       
       await API.post('/orders', formDataToSend);
 
-      setSuccess('ORDER PLACED SUCCESSFULLY! PENDING PAYMENT VERIFICATION.');
+      setSuccess('Order placed successfully! Pending payment verification.');
       
       setFormData({
         customerName: user?.name || '',
@@ -115,7 +113,7 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
 
     } catch (error) {
       console.error('Error placing order:', error);
-      setError(error.response?.data?.message || 'FAILED TO PLACE ORDER. PLEASE TRY AGAIN.');
+      setError(error.response?.data?.message || 'Failed to place order. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -130,69 +128,69 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
 
   return (
     <Modal show={show} onHide={handleCloseModal} size="lg" centered>
-      <Modal.Header closeButton>
-        <Modal.Title className="fw-bold text-uppercase">
-          CHECKOUT & PAYMENT
+      <Modal.Header closeButton className="border-bottom pb-3">
+        <Modal.Title className="section-title mb-0">
+          Checkout & Payment
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="py-4">
         {error && (
-          <Alert variant="danger" className="mb-3 rounded-0 border-dark">
+          <Alert variant="danger" className="mb-3">
             {error}
           </Alert>
         )}
         
         {success && (
-          <Alert variant="success" className="mb-3 rounded-0 border-dark bg-warning text-dark border-2">
+          <Alert variant="success" className="mb-3">
             {success}
           </Alert>
         )}
 
         <Form id="checkout-form" onSubmit={handleSubmit}>
-          <Row>
+          <Row className="gy-3">
             <Col md={6}>
-              <h5 className="fw-bold text-uppercase mb-3 border-bottom border-dark pb-2">
-                CUSTOMER INFORMATION
+              <h5 className="fw-semibold mb-3 border-bottom pb-2" style={{ fontSize: "15px", color: "#111111" }}>
+                Customer Information
               </h5>
               
               <Form.Group className="mb-3">
-                <Form.Label>FULL NAME *</Form.Label>
+                <Form.Label>Full Name *</Form.Label>
                 <Form.Control
                   type="text"
                   name="customerName"
                   value={formData.customerName}
                   onChange={handleInputChange}
                   required
-                  placeholder="FULL NAME"
+                  placeholder="John Doe"
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>EMAIL *</Form.Label>
+                <Form.Label>Email Address *</Form.Label>
                 <Form.Control
                   type="email"
                   name="customerEmail"
                   value={formData.customerEmail}
                   onChange={handleInputChange}
                   required
-                  placeholder="EMAIL ADDRESS"
+                  placeholder="john@example.com"
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>PHONE NUMBER *</Form.Label>
+                <Form.Label>Phone Number *</Form.Label>
                 <Form.Control
                   type="tel"
                   name="customerPhone"
                   value={formData.customerPhone}
                   onChange={handleInputChange}
                   required
-                  placeholder="PHONE NUMBER"
+                  placeholder="+94 77 123 4567"
                 />
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Label>SHIPPING ADDRESS *</Form.Label>
+                <Form.Label>Shipping Address *</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
@@ -200,25 +198,25 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
                   value={formData.shippingAddress}
                   onChange={handleInputChange}
                   required
-                  placeholder="COMPLETE SHIPPING ADDRESS"
+                  placeholder="123 Main Street, Colombo, Sri Lanka"
                 />
               </Form.Group>
             </Col>
 
             <Col md={6}>
-              <h5 className="fw-bold text-uppercase mb-3 border-bottom border-dark pb-2">
-                PAYMENT INSTRUCTIONS
+              <h5 className="fw-semibold mb-3 border-bottom pb-2" style={{ fontSize: "15px", color: "#111111" }}>
+                Payment Details
               </h5>
 
-              <div className="p-3 bg-light border border-2 border-dark mb-3">
-                <h6 className="fw-bold text-uppercase mb-2">BANK TRANSFER DETAILS:</h6>
-                <p className="mb-1 small"><strong>ACCOUNT:</strong> HAPPYHEELS STORE</p>
-                <p className="mb-1 small"><strong>BANK:</strong> COMMERCIAL BANK</p>
-                <p className="mb-0 small"><strong>ACCOUNT NO:</strong> 1234567890</p>
+              <div className="p-3 mb-3 border rounded-3" style={{ backgroundColor: "#F7F7F8" }}>
+                <h6 className="fw-semibold mb-2" style={{ fontSize: "14px", color: "#111111" }}>Bank Transfer Instructions</h6>
+                <p className="mb-1 subtitle"><strong>Account Name:</strong> Happy Heels Store</p>
+                <p className="mb-1 subtitle"><strong>Bank:</strong> Commercial Bank</p>
+                <p className="mb-0 subtitle"><strong>Account No:</strong> 1234567890</p>
               </div>
 
               <Form.Group className="mb-3">
-                <Form.Label>UPLOAD BANK SLIP *</Form.Label>
+                <Form.Label>Upload Bank Slip *</Form.Label>
                 <Form.Control
                   type="file"
                   accept="image/*,.pdf"
@@ -226,49 +224,49 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
                   required
                 />
                 {bankSlip && (
-                  <div className="mt-2 text-uppercase fw-bold small text-success">
-                    SELECTED: {bankSlip.name}
+                  <div className="mt-2 subtitle text-success fw-medium">
+                    Selected: {bankSlip.name}
                   </div>
                 )}
               </Form.Group>
             </Col>
           </Row>
 
-          <hr className="border-dark" />
+          <hr className="my-4 border-light" />
 
-          <h5 className="fw-bold text-uppercase mb-3">
-            ORDER SUMMARY
+          <h5 className="fw-semibold mb-3" style={{ fontSize: "15px", color: "#111111" }}>
+            Order Summary
           </h5>
           
           <div className="checkout-items mb-3">
             {cartItems.map((item) => (
-              <div key={item.id} className="d-flex align-items-center mb-2 p-2 border border-dark bg-white">
+              <div key={item.id} className="d-flex align-items-center mb-2 p-2 border rounded-3 bg-white">
                 <img 
                   src={item.imageUrl} 
                   alt={item.name} 
-                  style={{ width: '60px', height: '60px', objectFit: 'cover', border: '1px solid #000', marginRight: '15px' }} 
+                  style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #E5E5E5', marginRight: '12px' }} 
                 />
                 <div className="flex-grow-1">
-                  <h6 className="mb-0 fw-bold text-uppercase">{item.name}</h6>
-                  <small className="text-muted fw-bold">QTY: {item.quantity}</small>
+                  <h6 className="mb-0 fw-medium" style={{ fontSize: "14px", color: "#111111" }}>{item.name}</h6>
+                  <small className="subtitle">Qty: {item.quantity}</small>
                 </div>
-                <div className="fw-bold fs-6">
+                <div className="fw-semibold" style={{ fontSize: "14px", color: "#111111" }}>
                   LKR {item.price * item.quantity}
                 </div>
               </div>
             ))}
             
-            <div className="p-3 bg-dark text-white text-end border border-2 border-dark mt-3">
-              <h4 className="mb-0 fw-bold text-uppercase" style={{ letterSpacing: '1.5px' }}>
-                TOTAL: LKR {totalPrice.toFixed(2)}
-              </h4>
+            <div className="p-3 border rounded-3 text-end mt-3" style={{ backgroundColor: "#F7F7F8" }}>
+              <span className="fw-bold fs-5" style={{ color: "#111111" }}>
+                Total: LKR {totalPrice.toFixed(2)}
+              </span>
             </div>
           </div>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
-          CANCEL
+      <Modal.Footer className="border-top pt-3">
+        <Button variant="secondary" className="btn-light" onClick={handleCloseModal} disabled={loading}>
+          Cancel
         </Button>
         <Button 
           variant="primary" 
@@ -276,7 +274,7 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice, onOrderSucces
           form="checkout-form"
           disabled={loading || !bankSlip}
         >
-          {loading ? 'PROCESSING...' : 'PLACE ORDER'}
+          {loading ? 'Processing...' : 'Place Order'}
         </Button>
       </Modal.Footer>
     </Modal>

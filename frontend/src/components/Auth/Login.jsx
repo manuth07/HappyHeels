@@ -43,7 +43,7 @@ const Login = () => {
             
         } catch (err) {
             console.error('Login error:', err);
-            setError('INVALID EMAIL OR PASSWORD');
+            setError('Invalid email or password');
         }
     };
 
@@ -65,22 +65,22 @@ const Login = () => {
                     onClick={() => navigate('/')}
                     title="Close"
                 >
-                    X
+                    <i className="bi bi-x-lg"></i>
                 </button>
-                <h2 className="auth-title">ACCOUNT LOGIN</h2>
+                <h2 className="auth-title">Welcome Back</h2>
                 
                 <div className="login-type-tabs">
                     <button 
                         className={`tab ${loginType === 'user' ? 'active' : ''}`}
                         onClick={() => setLoginType('user')}
                     >
-                        CUSTOMER LOGIN
+                        Customer
                     </button>
                     <button 
                         className={`tab ${loginType === 'admin' ? 'active' : ''}`}
                         onClick={() => setLoginType('admin')}
                     >
-                        ADMIN LOGIN
+                        Administrator
                     </button>
                 </div>
 
@@ -88,19 +88,19 @@ const Login = () => {
                 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="emailInput">EMAIL ADDRESS</label>
+                        <label className="form-label" htmlFor="emailInput">Email Address</label>
                         <input
                             type="email"
                             className="form-control"
                             id="emailInput"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="ENTER EMAIL ADDRESS"
+                            placeholder="name@example.com"
                             required
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label className="form-label" htmlFor="passwordInput">PASSWORD</label>
+                        <label className="form-label" htmlFor="passwordInput">Password</label>
                         <div className="position-relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -108,18 +108,18 @@ const Login = () => {
                                 id="passwordInput"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="ENTER PASSWORD"
+                                placeholder="Enter password"
                                 required
                             />
                         </div>
                     </div>
                     <button type="submit" className="auth-button">
-                        {loginType === 'admin' ? 'ADMIN LOGIN' : 'CUSTOMER LOGIN'}
+                        {loginType === 'admin' ? 'Sign In as Admin' : 'Sign In'}
                     </button>
                 </form>
 
                 <p className="auth-link-text">
-                    DON'T HAVE AN ACCOUNT? <Link to="/register">REGISTER HERE</Link>
+                    Don't have an account? <Link to="/register">Register here</Link>
                 </p>
             </div>
         </div>

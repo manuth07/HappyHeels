@@ -36,7 +36,7 @@ const AddProduct = () => {
     const user = localStorage.getItem('user');
     
     if (!token || !user) {
-      alert("PLEASE LOGIN FIRST");
+      alert("Please login first");
       window.location.href = '/login';
       return;
     }
@@ -44,11 +44,11 @@ const AddProduct = () => {
     try {
       const userData = JSON.parse(user);
       if (userData.role !== 'ROLE_ADMIN') {
-        alert("ONLY ADMINS CAN ADD PRODUCTS");
+        alert("Only administrators can add products");
         return;
       }
     } catch (e) {
-      alert("INVALID USER DATA. PLEASE LOGIN AGAIN.");
+      alert("Invalid user data. Please login again.");
       window.location.href = '/login';
       return;
     }
@@ -61,7 +61,7 @@ const AddProduct = () => {
         },
       })
       .then((response) => {
-        alert("PRODUCT ADDED SUCCESSFULLY");
+        alert("Product added successfully!");
         setProduct({
           name: "",
           brand: "",
@@ -76,21 +76,21 @@ const AddProduct = () => {
       })
       .catch((error) => {
         console.error("Full error:", error);
-        alert("ERROR ADDING PRODUCT: " + (error.response?.data?.message || error.message));
+        alert("Error adding product: " + (error.response?.data?.message || error.message));
       });
   };
 
   return (
-    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "100px", marginBottom: "50px" }}>
-      <div className="border border-2 border-dark p-4 bg-white" style={{ boxShadow: '4px 4px 0px #000000' }}>
-        <h2 className="fw-bold text-uppercase mb-4 border-bottom border-dark pb-3">ADD NEW PRODUCT</h2>
+    <div className="container-fluid max-width-1200 px-4" style={{ marginTop: "68px", marginBottom: "50px" }}>
+      <div className="border rounded-3 p-4 bg-white">
+        <h2 className="section-title mb-4 border-bottom pb-3">Add New Product</h2>
         <form className="row g-3" onSubmit={submitHandler}>
           <div className="col-md-6">
-            <label className="form-label">PRODUCT NAME</label>
+            <label className="form-label">Product Name *</label>
             <input
               type="text"
               className="form-control"
-              placeholder="ENTER PRODUCT NAME"
+              placeholder="e.g. Leather Heel Boots"
               onChange={handleInputChange}
               value={product.name}
               name="name"
@@ -98,23 +98,23 @@ const AddProduct = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">BRAND</label>
+            <label className="form-label">Brand *</label>
             <input
               type="text"
               name="brand"
               className="form-control"
-              placeholder="ENTER BRAND"
+              placeholder="e.g. Happy Heels Premium"
               value={product.brand}
               onChange={handleInputChange}
               required
             />
           </div>
           <div className="col-12">
-            <label className="form-label">DESCRIPTION</label>
-            <input
-              type="text"
+            <label className="form-label">Description *</label>
+            <textarea
               className="form-control"
-              placeholder="ENTER DESCRIPTION"
+              rows={3}
+              placeholder="Detailed description of the footwear item"
               value={product.description}
               name="description"
               onChange={handleInputChange}
@@ -122,11 +122,11 @@ const AddProduct = () => {
             />
           </div>
           <div className="col-md-4">
-            <label className="form-label">PRICE (LKR)</label>
+            <label className="form-label">Price (LKR) *</label>
             <input
               type="number"
               className="form-control"
-              placeholder="ENTER PRICE"
+              placeholder="e.g. 4500"
               onChange={handleInputChange}
               value={product.price}
               name="price"
@@ -134,7 +134,7 @@ const AddProduct = () => {
             />
           </div>
           <div className="col-md-4">
-            <label className="form-label">CATEGORY</label>
+            <label className="form-label">Category *</label>
             <select
               className="form-select"
               value={product.category}
@@ -142,7 +142,7 @@ const AddProduct = () => {
               name="category"
               required
             >
-              <option value="">SELECT CATEGORY</option>
+              <option value="">Select Category</option>
               <option value="Gents">Gents</option>
               <option value="Ladies">Ladies</option>
               <option value="Kids">Kids</option>
@@ -150,11 +150,11 @@ const AddProduct = () => {
             </select>
           </div>
           <div className="col-md-4">
-            <label className="form-label">STOCK QUANTITY</label>
+            <label className="form-label">Stock Quantity *</label>
             <input
               type="number"
               className="form-control"
-              placeholder="STOCK REMAINING"
+              placeholder="Stock count"
               onChange={handleInputChange}
               value={product.stockQuantity}
               name="stockQuantity"
@@ -162,7 +162,7 @@ const AddProduct = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">RELEASE DATE</label>
+            <label className="form-label">Release Date</label>
             <input
               type="date"
               className="form-control"
@@ -172,7 +172,7 @@ const AddProduct = () => {
             />
           </div>
           <div className="col-md-6">
-            <label className="form-label">PRODUCT IMAGE</label>
+            <label className="form-label">Product Image *</label>
             <input
               className="form-control"
               type="file"
@@ -192,8 +192,8 @@ const AddProduct = () => {
                   setProduct({ ...product, productAvailable: e.target.checked })
                 }
               />
-              <label className="form-check-label text-uppercase fw-bold" htmlFor="gridCheck">
-                PRODUCT AVAILABLE
+              <label className="form-check-label fw-medium" htmlFor="gridCheck">
+                Product Available for Purchase
               </label>
             </div>
           </div>
@@ -202,7 +202,7 @@ const AddProduct = () => {
               type="submit"
               className="btn btn-primary"
             >
-              SUBMIT PRODUCT
+              Submit Product
             </button>
           </div>
         </form>
