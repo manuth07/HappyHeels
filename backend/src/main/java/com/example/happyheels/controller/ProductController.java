@@ -1,104 +1,114 @@
 package com.example.happyheels.controller;
 
+import com.example.happyheels.model.Product;
 import com.example.happyheels.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.List;
-import com.example.happyheels.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "https://frontend5-ten.vercel.app")
+import java.io.IOException;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class ProductController {
 
-    @Autowired
-    private ProductService service;
+    private final ProductService service;
+
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        return new ResponseEntity<>(service.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(service.getAllProducts());
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
-
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = service.getProductById(id);
-        if(product != null)
-            return new ResponseEntity<>(service.getProductById(id), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/product")
-    public ResponseEntity<?> addProduct(@RequestPart Product product,
-                                        @RequestPart MultipartFile imageFile,
-                                        org.springframework.security.core.Authentication authentication){
+    public ResponseEntity<?> addProduct(
+            @RequestPart Product product,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile,
+            Authentication authentication) {
         try {
-            System.out.println("=== Add Product Request ===");
-            if (authentication != null) {
-                System.out.println("User: " + authentication.getName());
-                System.out.println("Authorities: " + authentication.getAuthorities());
-                System.out.println("Is authenticated: " + authentication.isAuthenticated());
-            } else {
-                System.out.println("No authentication found!");
-            }
-            
-            Product product1 = service.addProduct(product, imageFile);
-            return new ResponseEntity<>(product1, HttpStatus.CREATED);
-        }
-        catch(Exception e){
-            System.err.println("Error adding product: " + e.getMessage());
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Product savedProduct = service.addProduct(product, imageFile);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error adding product: " + e.getMessage());
         }
     }
+
     @GetMapping("/product/{productId}/image")
-    public ResponseEntity<byte[]> getImageByProductId(@PathVariable Long productId){
+    public ResponseEntity<Resource> getImageByProductId(@PathVariable Long productId) {
         Product product = service.getProductById(productId);
-        byte[] imageFile = product.getImageDate();
-        return ResponseEntity.ok().contentType(MediaType.valueOf(product.getImageType())).body(imageFile);
+        Resource resource = service.getProductImageResource(productId);
+
+        if (resource == null || !resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        MediaType mediaType = MediaType.IMAGE_JPEG;
+        if (product.getImageType() != null && !product.getImageType().isEmpty()) {
+            try {
+                mediaType = MediaType.parseMediaType(product.getImageType());
+            } catch (Exception ignored) {
+            }
+        }
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .body(resource);
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestPart Product product,
-                                                @RequestPart MultipartFile imageFile){
-        Product product1 = null;
+    public ResponseEntity<String> updateProduct(
+            @PathVariable Long id,
+            @RequestPart Product product,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
         try {
-            product1 = service.updateProduct(id, product, imageFile);
+            Product updatedProduct = service.updateProduct(id, product, imageFile);
+            if (updatedProduct != null) {
+                return ResponseEntity.ok("updated");
+            }
+            return ResponseEntity.badRequest().body("Failed to update product");
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if(product1 != null){
-            return new ResponseEntity<>("updated", HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>("Failed to update!", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating product: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         Product product = service.getProductById(id);
         if (product != null) {
             service.deleteProduct(id);
-            return new ResponseEntity<>("deleted", HttpStatus.OK);
+            return ResponseEntity.ok("deleted");
         }
-        else{
-            return new ResponseEntity<>("Product not found", HttpStatus.BAD_REQUEST);
-        }
+        return ResponseEntity.badRequest().body("Product not found");
     }
 
-    @RequestMapping("products/search")
-    public ResponseEntity<List<Product>> searchProduct(String keyword){
-        System.out.println("Searching for " + keyword);
+    @GetMapping("/products/search")
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam String keyword) {
         List<Product> products = service.searchProducts(keyword);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/products/category/{category}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String category) {
+        List<Product> products = service.getProductsByCategory(category);
+        return ResponseEntity.ok(products);
     }
 }

@@ -34,16 +34,10 @@ public class Product {
 
     private String imageName;
     private String imageType;
-
-    @Lob
-    private byte[] imageDate;
+    private String imageUrl;
 
     // ✅ Reviews relationship added
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
-
-    public void setImageData(byte[] bytes) {
-        this.imageDate = bytes;
-    }
 }
